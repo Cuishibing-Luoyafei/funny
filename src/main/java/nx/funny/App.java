@@ -1,4 +1,4 @@
-package nx;
+package nx.funny;
 
 /**
  * Hello world!

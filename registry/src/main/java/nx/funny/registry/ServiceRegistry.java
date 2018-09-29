@@ -1,6 +1,6 @@
 package nx.funny.registry;
 
-import java.util.List;
+import java.util.Set;
 
 public interface ServiceRegistry {
 
@@ -8,6 +8,6 @@ public interface ServiceRegistry {
 
     void remove(ServiceInfo info);
 
-    List<ServiceInfo> retrive(Class<?> serviceClass);
+    Set<ServiceInfo> retrive(Class<?> serviceClass);
 
 }

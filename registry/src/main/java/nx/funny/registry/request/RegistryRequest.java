@@ -1,40 +1,52 @@
 package nx.funny.registry.request;
 
-import java.io.Serializable;
+import java.util.Arrays;
 
-public class RegistryRequest implements Serializable {
-    private RegistryRequestHead head;
-    private RegistryRequestBody body;
+public class RegistryRequest {
+    private int opertation;
+    private int port;
+    private short[] address = new short[4];
+    private String typeName;
 
-    public RegistryRequest() {
+    public int getOpertation() {
+        return opertation;
     }
 
-    public RegistryRequest(RegistryRequestHead head, RegistryRequestBody body) {
-        this.head = head;
-        this.body = body;
+    public void setOpertation(int opertation) {
+        this.opertation = opertation;
     }
 
-    public RegistryRequestHead getHead() {
-        return head;
+    public int getPort() {
+        return port;
     }
 
-    public void setHead(RegistryRequestHead head) {
-        this.head = head;
+    public void setPort(int port) {
+        this.port = port;
     }
 
-    public RegistryRequestBody getBody() {
-        return body;
+    public short[] getAddress() {
+        return address;
     }
 
-    public void setBody(RegistryRequestBody body) {
-        this.body = body;
+    public void setAddress(short[] address) {
+        this.address = address;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     @Override
     public String toString() {
         return "RegistryRequest{" +
-                "head=" + head +
-                ", body=" + body +
+                "opertation=" + opertation +
+                ", port=" + port +
+                ", address=" + Arrays.toString(address) +
+                ", typeName='" + typeName + '\'' +
                 '}';
     }
 }

@@ -43,7 +43,7 @@ public class ServerServiceRegistry implements ServiceRegistry {
     }
 
     @Override
-    public Set<ServicePosition> retrive(ServiceType type) {
+    public Set<ServicePosition> retrieve(ServiceType type) {
         return serviceRegistry.get(type);
     }
 }

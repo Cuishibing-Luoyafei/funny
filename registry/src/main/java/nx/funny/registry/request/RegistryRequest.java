@@ -1,34 +1,30 @@
 package nx.funny.registry.request;
 
-import java.util.Arrays;
+import java.net.InetSocketAddress;
 
 public class RegistryRequest {
-    private int opertation;
-    private int port;
-    private short[] address = new short[4];
+    public static final int OPERATION_REGISTER = 0;
+    public static final int OPERATION_REMOVE = 1;
+    public static final int OPERATION_REMOVE_ALL = 2;
+    public static final int OPERATION_RETRIEVE = 3;
+
+    private int operation;
+    private InetSocketAddress address;
     private String typeName;
 
-    public int getOpertation() {
-        return opertation;
+    public int getOperation() {
+        return operation;
     }
 
-    public void setOpertation(int opertation) {
-        this.opertation = opertation;
+    public void setOperation(int operation) {
+        this.operation = operation;
     }
 
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public short[] getAddress() {
+    public InetSocketAddress getAddress() {
         return address;
     }
 
-    public void setAddress(short[] address) {
+    public void setAddress(InetSocketAddress address) {
         this.address = address;
     }
 
@@ -43,9 +39,8 @@ public class RegistryRequest {
     @Override
     public String toString() {
         return "RegistryRequest{" +
-                "opertation=" + opertation +
-                ", port=" + port +
-                ", address=" + Arrays.toString(address) +
+                "operation=" + operation +
+                ", address=" + address +
                 ", typeName='" + typeName + '\'' +
                 '}';
     }

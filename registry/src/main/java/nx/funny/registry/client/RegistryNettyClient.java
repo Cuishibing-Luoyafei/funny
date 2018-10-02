@@ -8,6 +8,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import nx.funny.registry.client.encoder.RequestEncoder;
+import nx.funny.registry.client.handler.SendRequestHandler;
 import nx.funny.registry.request.RegistryRequest;
 
 public class RegistryNettyClient implements RegistryClient {
@@ -29,7 +31,9 @@ public class RegistryNettyClient implements RegistryClient {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast(new SendRequestHandler(request));
+                            socketChannel.pipeline().addLast(
+                                    new SendRequestHandler(request),
+                                    new RequestEncoder());
                         }
                     })
                     .option(ChannelOption.SO_KEEPALIVE, true);

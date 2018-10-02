@@ -8,6 +8,8 @@ import nx.funny.registry.server.RegistryServer;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.InetSocketAddress;
+
 public class TempRequest {
 
     private RegistryServer registryServer;
@@ -29,9 +31,8 @@ public class TempRequest {
     public void request(){
         registryClient.init("127.0.0.1",9527);
         RegistryRequest request = new RegistryRequest();
-        request.setOpertation(1);
-        request.setPort(2344);
-        request.setAddress(new short[]{123, 222, 102, 1});
+        request.setOperation(1);
+        request.setAddress(new InetSocketAddress("127.0.2.1", 9999));
         request.setTypeName(Integer.class.getName());
         registryClient.sendRequest(request);
     }

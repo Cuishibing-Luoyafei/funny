@@ -22,10 +22,10 @@ public class ServerServiceRegistryTest {
         ServiceInfo serviceInfo2 = new ServiceInfo(String.class,InetSocketAddress.createUnresolved("127.0.1.1",9527));
         serviceRegistry.register(serviceInfo1);
         serviceRegistry.register(serviceInfo2);
-        Set<ServicePosition> result1 = serviceRegistry.retrive(new ServiceType(Integer.class));
+        Set<ServicePosition> result1 = serviceRegistry.retrieve(new ServiceType(Integer.class));
         Assert.assertNotNull(result1);
         Assert.assertTrue(result1.contains(new ServicePosition(InetSocketAddress.createUnresolved("127.0.1.1",9527))));
-        Set<ServicePosition> result2 = serviceRegistry.retrive(new ServiceType(String.class));
+        Set<ServicePosition> result2 = serviceRegistry.retrieve(new ServiceType(String.class));
         Assert.assertTrue(result2.contains(new ServicePosition(InetSocketAddress.createUnresolved("127.0.1.1",9527))));
     }
 

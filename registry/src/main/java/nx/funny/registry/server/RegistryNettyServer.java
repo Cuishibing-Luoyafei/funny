@@ -37,7 +37,7 @@ public class RegistryNettyServer implements RegistryServer{
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup,workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .childHandler(new ServerChannelInitializerImpl(true))
+                    .childHandler(new ServerChannelInitializer(true))
                     .childOption(ChannelOption.SO_KEEPALIVE,true);
             ChannelFuture f = bootstrap.bind(port).sync();
             f.channel().closeFuture().sync();

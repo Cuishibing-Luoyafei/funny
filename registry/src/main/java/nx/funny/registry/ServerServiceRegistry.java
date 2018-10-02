@@ -9,29 +9,41 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ServerServiceRegistry implements ServiceRegistry {
 
-    private ConcurrentHashMap<Class<?>, Set<ServiceInfo>> services = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ServiceType, Set<ServicePosition>> serviceRegistry = new ConcurrentHashMap<>();
 
+    @Override
     public void register(ServiceInfo info) {
-        Class<?> clazz = info.getClazz();
-        Set<ServiceInfo> serviceInfos = services.get(clazz);
-        if (serviceInfos == null) {
-            Set<ServiceInfo> infos = new HashSet<>();
-            infos.add(info);
-            services.put(clazz, infos);
-        } else {
-            if (serviceInfos.contains(info)) {
-                serviceInfos.remove(info);
+        ServiceType type = info.getType();
+        ServicePosition position = info.getPosition();
+        synchronized (serviceRegistry) {
+            Set<ServicePosition> container = serviceRegistry.get(type);
+            if (container == null) {
+                container = new HashSet<>();
+                container.add(position);
+                serviceRegistry.put(type, container);
+                return;
             }
-            serviceInfos.add(info);
+        }
+        Set<ServicePosition> container = serviceRegistry.get(type);
+        synchronized (container) {
+            container.remove(position);
+            container.add(position);
         }
     }
 
+    @Override
     public void remove(ServiceInfo info) {
-        Set<ServiceInfo> serviceInfos = services.get(info.getClazz());
-        serviceInfos.remove(info);
+        Set<ServicePosition> positions = serviceRegistry.get(info.getType());
+        positions.remove(info.getPosition());
     }
 
-    public Set<ServiceInfo> retrive(Class<?> serviceClass) {
-        return services.get(serviceClass);
+    @Override
+    public void removeAll(ServiceType type) {
+        serviceRegistry.remove(type);
+    }
+
+    @Override
+    public Set<ServicePosition> retrive(ServiceType type) {
+        return serviceRegistry.get(type);
     }
 }

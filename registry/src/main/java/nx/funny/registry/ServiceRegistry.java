@@ -8,6 +8,8 @@ public interface ServiceRegistry {
 
     void remove(ServiceInfo info);
 
-    Set<ServiceInfo> retrive(Class<?> serviceClass);
+    void removeAll(ServiceType type);
+
+    Set<ServicePosition> retrive(ServiceType type);
 
 }

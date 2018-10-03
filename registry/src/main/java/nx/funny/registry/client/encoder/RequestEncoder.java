@@ -11,7 +11,6 @@ import static nx.funny.registry.common.Constant.REQUEST_DELIMITER;
 
 public class RequestEncoder extends MessageToByteEncoder<RegistryRequest> {
 
-
     @Override
     protected void encode(ChannelHandlerContext ctx, RegistryRequest request, ByteBuf out) throws Exception {
         out.writeCharSequence(new Gson().toJson(request), DEFAULT_CHARSET);

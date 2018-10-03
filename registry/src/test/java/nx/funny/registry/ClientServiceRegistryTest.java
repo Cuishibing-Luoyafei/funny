@@ -24,7 +24,6 @@ public class ClientServiceRegistryTest {
     public void before() {
         registryServer = new RegistryNettyServer(9527);
         registryClient = new RegistryNettyClient();
-        registryClient.init("localhost", 9527);
     }
 
     @Test
@@ -44,6 +43,7 @@ public class ClientServiceRegistryTest {
 
     @Test
     public void testClientServiceRegistry() {
+        registryClient.init("localhost", 9527);
         ServiceRegistry serviceRegistry = new ClientServiceRegistry(registryClient);
 
         serviceRegistry.register(new ServiceInfo(Integer.class.getName(), "127.0.0.1", 9999));

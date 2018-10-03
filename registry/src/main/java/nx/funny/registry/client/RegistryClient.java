@@ -9,4 +9,6 @@ public interface RegistryClient {
 
     RegistryResponse sendRequest(RegistryRequest request);
 
+    void shutdown();
+
 }

@@ -11,49 +11,83 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import nx.funny.registry.client.decoder.ResponseDecoder;
 import nx.funny.registry.client.encoder.RequestEncoder;
-import nx.funny.registry.client.handler.SendRequestHandler;
+import nx.funny.registry.client.handler.RegistryResponseHandler;
 import nx.funny.registry.request.RegistryRequest;
 import nx.funny.registry.response.RegistryResponse;
 
 public class RegistryNettyClient implements RegistryClient {
     private String serverAddress;
     private int port;
+
+    private final RegistryResponse[] responseContainer = new RegistryResponse[1];
+
+    private EventLoopGroup workerGroup;
+    private ChannelFuture connectFuture;
+
     @Override
     public void init(String serverAddress, int port) {
         this.serverAddress = serverAddress;
         this.port = port;
+        workerGroup = new NioEventLoopGroup();
+        Bootstrap bootstrap = new Bootstrap();
+        bootstrap.group(workerGroup)
+                .channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        socketChannel.pipeline().addLast(
+                                new RequestEncoder(),
+                                new LineBasedFrameDecoder(64 * 1024),
+                                new ResponseDecoder(),
+                                new RegistryResponseHandler(responseContainer));
+                    }
+                })
+                .option(ChannelOption.SO_KEEPALIVE, true);
+        connectFuture = bootstrap.connect(serverAddress, port);
+        try {
+            connectFuture.sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public RegistryResponse sendRequest(RegistryRequest request) {
-        RegistryResponse[] responseResult = new RegistryResponse[1];
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-        try{
-            Bootstrap bootstrap = new Bootstrap();
-            bootstrap.group(workerGroup)
-                    .channel(NioSocketChannel.class)
-                    .handler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast(
-                                    new SendRequestHandler(request),
-                                    new RequestEncoder(),
-                                    new LineBasedFrameDecoder(64 * 1024),
-                                    new ResponseDecoder(responseResult));
-                        }
-                    })
-                    .option(ChannelOption.SO_KEEPALIVE, true);
-
-            ChannelFuture f = bootstrap.connect(serverAddress, port).sync();
-            f.channel().closeFuture().sync();
-            synchronized (responseResult) {
-                return responseResult[0];
-            }
+        ChannelFuture channelFuture = connectFuture.channel().pipeline().writeAndFlush(request);
+        try {
+            channelFuture.sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
-            return null;
-        } finally {
-            workerGroup.shutdownGracefully();
+            throw new RuntimeException(e);
+        }
+
+        RegistryResponse response = null;
+        while (true) {
+            synchronized (responseContainer) {
+                if (responseContainer[0] == null) {
+                    try {
+                        responseContainer.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break;
+                    }
+                } else {
+                    response = responseContainer[0];
+                    responseContainer[0] = null;
+                    break;
+                }
+            }
+        }
+        return response;
+    }
+
+    @Override
+    public void shutdown() {
+        try {
+            workerGroup.shutdownGracefully().sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -1,7 +1,6 @@
 package nx.funny.registry;
 
 import java.io.Serializable;
-import java.net.InetSocketAddress;
 import java.util.Objects;
 
 /**
@@ -15,13 +14,14 @@ public class ServiceInfo implements Serializable {
     public ServiceInfo() {
     }
 
-    public ServiceInfo(String typeName, InetSocketAddress address) {
-        this.type = new ServiceType(typeName);
-        this.position = new ServicePosition(address);
-    }
     public ServiceInfo(ServiceType type, ServicePosition position) {
         this.type = type;
         this.position = position;
+    }
+
+    public ServiceInfo(String typeName, String ip, int port) {
+        this(new ServiceType(typeName),
+                new ServicePosition(ip, port));
     }
 
     @Override

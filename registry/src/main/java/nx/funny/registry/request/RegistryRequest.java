@@ -1,6 +1,7 @@
 package nx.funny.registry.request;
 
-import java.net.InetSocketAddress;
+import nx.funny.registry.ServicePosition;
+import nx.funny.registry.ServiceType;
 
 public class RegistryRequest {
     public static final int OPERATION_REGISTER = 0;
@@ -9,8 +10,8 @@ public class RegistryRequest {
     public static final int OPERATION_RETRIEVE = 3;
 
     private int operation;
-    private InetSocketAddress address;
-    private String typeName;
+    private ServiceType type;
+    private ServicePosition position;
 
     public int getOperation() {
         return operation;
@@ -20,28 +21,19 @@ public class RegistryRequest {
         this.operation = operation;
     }
 
-    public InetSocketAddress getAddress() {
-        return address;
+    public ServicePosition getPosition() {
+        return position;
     }
 
-    public void setAddress(InetSocketAddress address) {
-        this.address = address;
+    public void setPosition(ServicePosition position) {
+        this.position = position;
     }
 
-    public String getTypeName() {
-        return typeName;
+    public ServiceType getType() {
+        return type;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
-
-    @Override
-    public String toString() {
-        return "RegistryRequest{" +
-                "operation=" + operation +
-                ", address=" + address +
-                ", typeName='" + typeName + '\'' +
-                '}';
+    public void setType(ServiceType type) {
+        this.type = type;
     }
 }

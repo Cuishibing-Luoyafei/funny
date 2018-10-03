@@ -19,7 +19,8 @@ public class ClientServiceRegistry implements ServiceRegistry {
     private RegistryRequest generateRequest(ServiceInfo info, int operation) {
         RegistryRequest request = new RegistryRequest();
         request.setOperation(operation);
-        request.setTypeName(info.getType().getTypeName());
+        request.setType(info.getType());
+        request.setPosition(info.getPosition());
         return request;
     }
 

@@ -1,5 +1,6 @@
 package nx.funny.registry;
 
+import nx.funny.registry.server.ServerServiceRegistry;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,13 +14,13 @@ public class ServerServiceRegistryTest {
 
     @Before
     public void before(){
-        serviceRegistry = new ServerServiceRegistry();
+        serviceRegistry = ServerServiceRegistry.INSTANCE;
     }
 
     @Test
     public void testRegister() {
-        ServiceInfo serviceInfo1 = new ServiceInfo(Integer.class.getName(), InetSocketAddress.createUnresolved("127.0.1.1", 9527));
-        ServiceInfo serviceInfo2 = new ServiceInfo(String.class.getName(), InetSocketAddress.createUnresolved("127.0.1.1", 9527));
+        ServiceInfo serviceInfo1 = new ServiceInfo(Integer.class.getName(), "127.0.1.1", 9527);
+        ServiceInfo serviceInfo2 = new ServiceInfo(String.class.getName(), "127.0.1.1", 9527);
         serviceRegistry.register(serviceInfo1);
         serviceRegistry.register(serviceInfo2);
         Set<ServicePosition> result1 = serviceRegistry.retrieve(new ServiceType(Integer.class.getName()));

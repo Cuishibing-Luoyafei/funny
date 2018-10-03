@@ -1,14 +1,14 @@
 package nx.funny.registry;
 
+import com.google.gson.Gson;
 import nx.funny.registry.client.RegistryClient;
 import nx.funny.registry.client.RegistryNettyClient;
 import nx.funny.registry.request.RegistryRequest;
+import nx.funny.registry.response.RegistryResponse;
 import nx.funny.registry.server.RegistryNettyServer;
 import nx.funny.registry.server.RegistryServer;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.net.InetSocketAddress;
 
 public class TempRequest {
 
@@ -31,10 +31,11 @@ public class TempRequest {
     public void request(){
         registryClient.init("127.0.0.1",9527);
         RegistryRequest request = new RegistryRequest();
-        request.setOperation(1);
-        request.setAddress(new InetSocketAddress("127.0.2.1", 9999));
-        request.setTypeName(Integer.class.getName());
-        registryClient.sendRequest(request);
+        request.setOperation(RegistryRequest.OPERATION_RETRIEVE);
+        request.setType(new ServiceType(Integer.class.getName()));
+        request.setPosition(new ServicePosition("21.23.34.13", 9090));
+        RegistryResponse response = registryClient.sendRequest(request);
+        System.out.println(new Gson().toJson(response));
     }
 
 }

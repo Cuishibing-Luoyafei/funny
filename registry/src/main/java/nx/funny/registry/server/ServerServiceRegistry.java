@@ -1,4 +1,9 @@
-package nx.funny.registry;
+package nx.funny.registry.server;
+
+import nx.funny.registry.ServiceInfo;
+import nx.funny.registry.ServicePosition;
+import nx.funny.registry.ServiceRegistry;
+import nx.funny.registry.ServiceType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +15,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerServiceRegistry implements ServiceRegistry {
 
     private final ConcurrentHashMap<ServiceType, Set<ServicePosition>> serviceRegistry = new ConcurrentHashMap<>();
+    public static ServiceRegistry INSTANCE = new ServerServiceRegistry();
 
+    private ServerServiceRegistry() {
+    }
     @Override
     public void register(ServiceInfo info) {
         ServiceType type = info.getType();

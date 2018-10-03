@@ -6,7 +6,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import nx.funny.registry.ServiceRegistry;
 
 /**
  * 服务注册中心服务器的netty实现
@@ -18,15 +17,12 @@ public class RegistryNettyServer implements RegistryServer{
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
-    private ServiceRegistry serviceRegistry;
-
     public RegistryNettyServer() {
 
     }
 
-    public RegistryNettyServer(int port,ServiceRegistry serviceRegistry) {
+    public RegistryNettyServer(int port) {
         this.port = port;
-        this.serviceRegistry = serviceRegistry;
     }
 
     @Override
@@ -63,11 +59,4 @@ public class RegistryNettyServer implements RegistryServer{
         this.port = port;
     }
 
-    public ServiceRegistry getServiceRegistry() {
-        return serviceRegistry;
-    }
-
-    public void setServiceRegistry(ServiceRegistry serviceRegistry) {
-        this.serviceRegistry = serviceRegistry;
-    }
 }

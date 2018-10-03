@@ -5,6 +5,7 @@ import nx.funny.registry.ServicePosition;
 import nx.funny.registry.ServiceRegistry;
 import nx.funny.registry.ServiceType;
 import nx.funny.registry.request.RegistryRequest;
+import nx.funny.registry.response.RegistryResponse;
 
 import java.util.Set;
 
@@ -32,17 +33,20 @@ public class ClientServiceRegistry implements ServiceRegistry {
 
     @Override
     public void remove(ServiceInfo info) {
-        RegistryRequest request = generateRequest(info, RegistryRequest.OPERATION_REGISTER);
+        RegistryRequest request = generateRequest(info, RegistryRequest.OPERATION_REMOVE);
         client.sendRequest(request);
     }
 
     @Override
     public void removeAll(ServiceType type) {
-
+        RegistryRequest request = generateRequest(new ServiceInfo(type, null), RegistryRequest.OPERATION_REMOVE_ALL);
+        client.sendRequest(request);
     }
 
     @Override
     public Set<ServicePosition> retrieve(ServiceType type) {
-        return null;
+        RegistryRequest request = generateRequest(new ServiceInfo(type, null), RegistryRequest.OPERATION_RETRIEVE);
+        RegistryResponse response = client.sendRequest(request);
+        return response.getAddresses();
     }
 }

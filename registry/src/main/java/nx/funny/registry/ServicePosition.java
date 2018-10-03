@@ -1,7 +1,6 @@
 package nx.funny.registry;
 
 import java.io.Serializable;
-import java.net.InetSocketAddress;
 import java.util.Objects;
 
 public class ServicePosition implements Serializable {
@@ -9,10 +8,6 @@ public class ServicePosition implements Serializable {
     private int port;
 
     public ServicePosition() {
-    }
-
-    public ServicePosition(InetSocketAddress address) {
-        this(address.getAddress().getHostAddress(), address.getPort());
     }
 
     public ServicePosition(String ip, int port) {

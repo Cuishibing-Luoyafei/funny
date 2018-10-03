@@ -14,8 +14,9 @@ public class ServiceInfo implements Serializable {
 
     public ServiceInfo() {
     }
-    public ServiceInfo(Class<?> clazz,InetSocketAddress address) {
-        this.type = new ServiceType(clazz);
+
+    public ServiceInfo(String typeName, InetSocketAddress address) {
+        this.type = new ServiceType(typeName);
         this.position = new ServicePosition(address);
     }
     public ServiceInfo(ServiceType type, ServicePosition position) {

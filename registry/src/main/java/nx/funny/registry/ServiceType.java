@@ -4,33 +4,33 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class ServiceType implements Serializable {
-    private Class<?> type;
+    private String typeName;
 
     public ServiceType() {
     }
 
-    public ServiceType(Class<?> type) {
-        this.type = type;
+    public ServiceType(String typeName) {
+        this.typeName = typeName;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(type);
+        return Objects.hashCode(typeName);
     }
 
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof ServiceType){
-            return Objects.equals(((ServiceType)obj).type,type);
+            return Objects.equals(((ServiceType) obj).typeName, typeName);
         }
         return false;
     }
 
-    public Class<?> getType() {
-        return type;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setType(Class<?> type) {
-        this.type = type;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }

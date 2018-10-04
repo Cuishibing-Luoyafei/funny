@@ -24,6 +24,7 @@ public class ServerServiceRegistry implements ServiceRegistry {
 
     private ServerServiceRegistry() {
     }
+
     @Override
     public void register(ServiceInfo info) {
         ServiceType type = info.getType();
@@ -48,7 +49,9 @@ public class ServerServiceRegistry implements ServiceRegistry {
     @Override
     public void remove(ServiceInfo info) {
         Set<ServicePosition> positions = serviceRegistry.get(info.getType());
-        positions.remove(info.getPosition());
+        synchronized (positions) {
+            positions.remove(info.getPosition());
+        }
         logger.log(Level.INFO, "remove:" + info.toString());
     }
 
@@ -62,15 +65,15 @@ public class ServerServiceRegistry implements ServiceRegistry {
     public Set<ServiceInfo> retrieve(String name) {
         Set<ServiceInfo> result = new HashSet<>();
         Set<Map.Entry<ServiceType, Set<ServicePosition>>> entries = serviceRegistry.entrySet();
-        for(Map.Entry<ServiceType, Set<ServicePosition>> entry : entries){
+        entries.forEach(entry -> {
             ServiceType key = entry.getKey();
-            if(key.getName().equals(name)){
+            if (key.getName().equals(name)) {
                 Set<ServicePosition> positions = entry.getValue();
-                for(ServicePosition position : positions){
-                    result.add(new ServiceInfo(key,position));
-                }
+                positions.forEach(position -> {
+                    result.add(new ServiceInfo(key, position));
+                });
             }
-        }
+        });
         logger.log(Level.INFO, "retrieve:" + name);
         return result;
     }

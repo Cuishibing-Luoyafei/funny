@@ -9,11 +9,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * ServiceRegistry的服务端实现
  */
 public class ServerServiceRegistry implements ServiceRegistry {
+
+    private Logger logger = Logger.getLogger(getClass().getName());
 
     private final ConcurrentHashMap<ServiceType, Set<ServicePosition>> serviceRegistry = new ConcurrentHashMap<>();
     public static ServiceRegistry INSTANCE = new ServerServiceRegistry();
@@ -30,6 +34,7 @@ public class ServerServiceRegistry implements ServiceRegistry {
                 container = new HashSet<>();
                 container.add(position);
                 serviceRegistry.put(type, container);
+                logger.log(Level.INFO, "注册服务:" + info.toString());
                 return;
             }
         }
@@ -37,17 +42,20 @@ public class ServerServiceRegistry implements ServiceRegistry {
         synchronized (container) {
             container.add(position);
         }
+        logger.log(Level.INFO, "register:" + info.toString());
     }
 
     @Override
     public void remove(ServiceInfo info) {
         Set<ServicePosition> positions = serviceRegistry.get(info.getType());
         positions.remove(info.getPosition());
+        logger.log(Level.INFO, "remove:" + info.toString());
     }
 
     @Override
     public void removeAll(ServiceType type) {
         serviceRegistry.remove(type);
+        logger.log(Level.INFO, "removeAll:" + type.toString());
     }
 
     @Override
@@ -63,6 +71,7 @@ public class ServerServiceRegistry implements ServiceRegistry {
                 }
             }
         }
+        logger.log(Level.INFO, "retrieve:" + name);
         return result;
     }
 }

@@ -39,8 +39,8 @@ public class DefaultRequestProcessor implements RequestProcessor {
                 registry.removeAll(serviceInfo.getType());
                 break;
             case OPERATION_RETRIEVE:
-                Set<ServicePosition> positions = registry.retrieve(serviceInfo.getType());
-                response.setAddresses(positions);
+                Set<ServiceInfo> positions = registry.retrieve(serviceInfo.getType().getName());
+                response.setInfos(positions);
                 break;
         }
         return response;

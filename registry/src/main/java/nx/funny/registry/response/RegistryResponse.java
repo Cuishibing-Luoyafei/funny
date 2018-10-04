@@ -1,5 +1,6 @@
 package nx.funny.registry.response;
 
+import nx.funny.registry.ServiceInfo;
 import nx.funny.registry.ServicePosition;
 
 import java.io.Serializable;
@@ -12,7 +13,7 @@ public class RegistryResponse implements Serializable {
 
     private int code;
     private String typeName;
-    private Set<ServicePosition> addresses;
+    private Set<ServiceInfo> infos;
 
     public int getCode() {
         return code;
@@ -30,11 +31,11 @@ public class RegistryResponse implements Serializable {
         this.typeName = typeName;
     }
 
-    public Set<ServicePosition> getAddresses() {
-        return addresses;
+    public Set<ServiceInfo> getInfos() {
+        return infos;
     }
 
-    public void setAddresses(Set<ServicePosition> addresses) {
-        this.addresses = addresses;
+    public void setInfos(Set<ServiceInfo> infos) {
+        this.infos = infos;
     }
 }

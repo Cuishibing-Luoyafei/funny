@@ -6,6 +6,7 @@ import nx.funny.registry.ServiceRegistry;
 import nx.funny.registry.ServiceType;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,7 +35,6 @@ public class ServerServiceRegistry implements ServiceRegistry {
         }
         Set<ServicePosition> container = serviceRegistry.get(type);
         synchronized (container) {
-            container.remove(position);
             container.add(position);
         }
     }
@@ -51,7 +51,18 @@ public class ServerServiceRegistry implements ServiceRegistry {
     }
 
     @Override
-    public Set<ServicePosition> retrieve(ServiceType type) {
-        return serviceRegistry.get(type);
+    public Set<ServiceInfo> retrieve(String name) {
+        Set<ServiceInfo> result = new HashSet<>();
+        Set<Map.Entry<ServiceType, Set<ServicePosition>>> entries = serviceRegistry.entrySet();
+        for(Map.Entry<ServiceType, Set<ServicePosition>> entry : entries){
+            ServiceType key = entry.getKey();
+            if(key.getName().equals(name)){
+                Set<ServicePosition> positions = entry.getValue();
+                for(ServicePosition position : positions){
+                    result.add(new ServiceInfo(key,position));
+                }
+            }
+        }
+        return result;
     }
 }

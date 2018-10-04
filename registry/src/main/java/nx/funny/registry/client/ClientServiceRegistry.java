@@ -1,7 +1,6 @@
 package nx.funny.registry.client;
 
 import nx.funny.registry.ServiceInfo;
-import nx.funny.registry.ServicePosition;
 import nx.funny.registry.ServiceRegistry;
 import nx.funny.registry.ServiceType;
 import nx.funny.registry.request.RegistryRequest;
@@ -44,9 +43,11 @@ public class ClientServiceRegistry implements ServiceRegistry {
     }
 
     @Override
-    public Set<ServicePosition> retrieve(ServiceType type) {
+    public Set<ServiceInfo> retrieve(String name) {
+        ServiceType type = new ServiceType();
+        type.setName(name);
         RegistryRequest request = generateRequest(new ServiceInfo(type, null), RegistryRequest.OPERATION_RETRIEVE);
         RegistryResponse response = client.sendRequest(request);
-        return response.getAddresses();
+        return response.getInfos();
     }
 }

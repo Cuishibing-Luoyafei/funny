@@ -19,8 +19,8 @@ public class ServiceInfo implements Serializable {
         this.position = position;
     }
 
-    public ServiceInfo(String typeName, String ip, int port) {
-        this(new ServiceType(typeName),
+    public ServiceInfo(String name, String ip, int port) {
+        this(new ServiceType(name),
                 new ServicePosition(ip, port));
     }
 

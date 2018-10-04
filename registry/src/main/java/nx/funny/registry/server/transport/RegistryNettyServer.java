@@ -1,4 +1,4 @@
-package nx.funny.registry.server;
+package nx.funny.registry.server.transport;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -6,11 +6,12 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import nx.funny.registry.server.RegistryServer;
 
 /**
  * 服务注册中心服务器的netty实现
  * */
-public class RegistryNettyServer implements RegistryServer{
+public class RegistryNettyServer implements RegistryServer {
     public static final int DEFAULT_PORT = 9527;
     private int port = DEFAULT_PORT;
 

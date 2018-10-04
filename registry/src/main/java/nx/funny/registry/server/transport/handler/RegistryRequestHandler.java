@@ -1,11 +1,11 @@
-package nx.funny.registry.server.handler;
+package nx.funny.registry.server.transport.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import nx.funny.registry.request.RegistryRequest;
 import nx.funny.registry.response.RegistryResponse;
-import nx.funny.registry.server.DefaultRequestProcessor;
-import nx.funny.registry.server.RequestProcessor;
+import nx.funny.registry.server.transport.DefaultRequestProcessor;
+import nx.funny.registry.server.transport.RequestProcessor;
 
 public class RegistryRequestHandler extends SimpleChannelInboundHandler<RegistryRequest> {
 

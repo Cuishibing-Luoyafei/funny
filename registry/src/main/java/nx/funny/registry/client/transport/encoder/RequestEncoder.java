@@ -20,4 +20,10 @@ public class RequestEncoder extends MessageToByteEncoder<RegistryRequest> {
         out.writeCharSequence(new Gson().toJson(request), DEFAULT_CHARSET);
         out.writeCharSequence(REQUEST_DELIMITER, DEFAULT_CHARSET);
     }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
+        ctx.close();
+    }
 }

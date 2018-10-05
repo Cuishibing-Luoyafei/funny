@@ -18,4 +18,10 @@ public class RegistryResponseHandler extends SimpleChannelInboundHandler<Registr
             responseContainer.notifyAll();
         }
     }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
+        ctx.close();
+    }
 }

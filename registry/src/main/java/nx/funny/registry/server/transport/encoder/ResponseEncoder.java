@@ -15,4 +15,10 @@ public class ResponseEncoder extends MessageToByteEncoder<RegistryResponse> {
         out.writeCharSequence(new Gson().toJson(response), DEFAULT_CHARSET);
         out.writeCharSequence(REQUEST_DELIMITER, DEFAULT_CHARSET);
     }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
+        ctx.close();
+    }
 }

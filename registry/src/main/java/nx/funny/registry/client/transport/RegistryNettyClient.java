@@ -12,9 +12,9 @@ import io.netty.handler.codec.LineBasedFrameDecoder;
 import nx.funny.registry.client.RegistryClient;
 import nx.funny.registry.client.transport.decoder.ResponseDecoder;
 import nx.funny.registry.client.transport.encoder.RequestEncoder;
+import nx.funny.registry.client.transport.handler.RegistryResponseHandler;
 import nx.funny.registry.request.RegistryRequest;
 import nx.funny.registry.response.RegistryResponse;
-import nx.funny.registry.server.transport.RegistryResponseHandler;
 
 public class RegistryNettyClient implements RegistryClient {
     private String serverAddress;

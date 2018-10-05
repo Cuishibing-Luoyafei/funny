@@ -1,4 +1,4 @@
-package nx.funny.registry.server.transport;
+package nx.funny.registry.client.transport.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

@@ -13,6 +13,10 @@ public class RequestEncoder extends MessageToByteEncoder<RegistryRequest> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, RegistryRequest request, ByteBuf out) throws Exception {
+        encode(request, out);
+    }
+
+    public static void encode(RegistryRequest request, ByteBuf out) {
         out.writeCharSequence(new Gson().toJson(request), DEFAULT_CHARSET);
         out.writeCharSequence(REQUEST_DELIMITER, DEFAULT_CHARSET);
     }

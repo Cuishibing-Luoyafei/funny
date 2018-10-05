@@ -3,7 +3,7 @@ package nx.funny.registry;
 import com.google.gson.Gson;
 import nx.funny.registry.client.ClientServiceRegistry;
 import nx.funny.registry.client.RegistryClient;
-import nx.funny.registry.client.transport.RegistryNettyClient;
+import nx.funny.registry.client.transport.RegistryOioClient;
 import nx.funny.registry.request.RegistryRequest;
 import nx.funny.registry.response.RegistryResponse;
 import nx.funny.registry.server.RegistryServer;
@@ -23,7 +23,7 @@ public class ClientServiceRegistryTest {
     @Before
     public void before() {
         registryServer = new RegistryNettyServer(9527);
-        registryClient = new RegistryNettyClient();
+        registryClient = new RegistryOioClient();
     }
 
     @Test

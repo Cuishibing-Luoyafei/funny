@@ -28,20 +28,25 @@ public class DefaultRequestProcessor implements RequestProcessor {
         response.setCode(CODE_SUCCESS);
         ServiceInfo serviceInfo = new ServiceInfo(request.getType(),
                 request.getPosition());
-        switch (request.getOperation()) {
-            case OPERATION_REGISTER:
-                registry.register(serviceInfo);
-                break;
-            case OPERATION_REMOVE:
-                registry.remove(serviceInfo);
-                break;
-            case OPERATION_REMOVE_ALL:
-                registry.removeAll(serviceInfo.getType());
-                break;
-            case OPERATION_RETRIEVE:
-                Set<ServiceInfo> positions = registry.retrieve(serviceInfo.getType().getName());
-                response.setInfos(positions);
-                break;
+        try {
+            switch (request.getOperation()) {
+                case OPERATION_REGISTER:
+                    registry.register(serviceInfo);
+                    break;
+                case OPERATION_REMOVE:
+                    registry.remove(serviceInfo);
+                    break;
+                case OPERATION_REMOVE_ALL:
+                    registry.removeAll(serviceInfo.getType());
+                    break;
+                case OPERATION_RETRIEVE:
+                    Set<ServiceInfo> positions = registry.retrieve(serviceInfo.getType().getName());
+                    response.setInfos(positions);
+                    break;
+            }
+        } catch (Throwable e) {
+            response.setCode(RegistryResponse.CODE_FAIL);
+            response.setMsg(e.getMessage());
         }
         return response;
     }

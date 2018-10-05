@@ -24,22 +24,32 @@ public class ClientServiceRegistry implements ServiceRegistry {
         return request;
     }
 
+    private void processResponse(RegistryResponse response) {
+        if (response.getCode() != RegistryResponse.CODE_SUCCESS) {
+            String msg = response.getMsg();
+            throw new RuntimeException("Registry exception:" + (msg == null ? "" : msg));
+        }
+    }
+
     @Override
     public void register(ServiceInfo info) {
         RegistryRequest request = generateRequest(info, RegistryRequest.OPERATION_REGISTER);
-        client.sendRequest(request);
+        RegistryResponse response = client.sendRequest(request);
+        processResponse(response);
     }
 
     @Override
     public void remove(ServiceInfo info) {
         RegistryRequest request = generateRequest(info, RegistryRequest.OPERATION_REMOVE);
-        client.sendRequest(request);
+        RegistryResponse response = client.sendRequest(request);
+        processResponse(response);
     }
 
     @Override
     public void removeAll(ServiceType type) {
         RegistryRequest request = generateRequest(new ServiceInfo(type, null), RegistryRequest.OPERATION_REMOVE_ALL);
-        client.sendRequest(request);
+        RegistryResponse response = client.sendRequest(request);
+        processResponse(response);
     }
 
     @Override
@@ -48,6 +58,7 @@ public class ClientServiceRegistry implements ServiceRegistry {
         type.setName(name);
         RegistryRequest request = generateRequest(new ServiceInfo(type, null), RegistryRequest.OPERATION_RETRIEVE);
         RegistryResponse response = client.sendRequest(request);
+        processResponse(response);
         return response.getInfos();
     }
 }

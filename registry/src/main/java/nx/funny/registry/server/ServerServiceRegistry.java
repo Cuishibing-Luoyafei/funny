@@ -35,7 +35,7 @@ public class ServerServiceRegistry implements ServiceRegistry {
                 container = new HashSet<>();
                 container.add(position);
                 serviceRegistry.put(type, container);
-                logger.log(Level.INFO, "注册服务:" + info.toString());
+                logger.log(Level.INFO, "register:" + info.toString());
                 return;
             }
         }

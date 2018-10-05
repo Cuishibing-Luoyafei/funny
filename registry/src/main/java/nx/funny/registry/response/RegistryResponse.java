@@ -17,7 +17,7 @@ public class RegistryResponse implements Serializable {
     public static final int CODE_FAIL = 1;
 
     private int code;
-    private String typeName;
+    private String msg;
     private Set<ServiceInfo> infos;
 
 }

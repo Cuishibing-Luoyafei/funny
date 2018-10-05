@@ -15,9 +15,18 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nx.funny.registry.common.Constant.REQUEST_DELIMITER_CR;
+import static nx.funny.registry.common.Constant.REQUEST_DELIMITER_NL;
+
 public class RegistryOioClient implements RegistryClient {
 
     private Socket socket;
+    private OutputStream output;
+    private InputStream input;
+
+    private static final int BUFFER_SIZE = 512;
+    private byte[] byteBuffer = new byte[BUFFER_SIZE];
+    private ByteBuf buffer = Unpooled.buffer(BUFFER_SIZE);
 
     @Override
     public void init(String serverAddress, int port) {
@@ -30,30 +39,35 @@ public class RegistryOioClient implements RegistryClient {
         }
     }
 
-    private OutputStream output;
-    private InputStream input;
-
     @Override
     public RegistryResponse sendRequest(RegistryRequest request) {
-        ByteBuf in = Unpooled.buffer();
-        RequestEncoder.encode(request, in);
+        buffer.clear();
+        RequestEncoder.encode(request, buffer);
         try {
-            in.getBytes(0, output, in.readableBytes());
-            in.clear();
-            byte[] buffer = new byte[1024];
+            buffer.getBytes(0, output, buffer.readableBytes());
+            buffer.clear();
             int len = 0;
-            while ((len = input.read(buffer)) > 0) {
-                in.writeBytes(buffer, 0, len);
-                if (len >= 2 && buffer[len - 1] == 10 && buffer[len - 2] == 13)
+            while ((len = input.read(byteBuffer)) > 0) {
+                buffer.writeBytes(byteBuffer, 0, len);
+                if (isInputEnd(byteBuffer, len))
                     break;
             }
             List<Object> responseContainer = new ArrayList<>(1);
-            ResponseDecoder.decode(in, responseContainer);
+            ResponseDecoder.decode(buffer, responseContainer);
             return (RegistryResponse) responseContainer.get(0);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 检查数据是否读取完毕
+     */
+    private boolean isInputEnd(byte[] byteBuffer, int len) {
+        return len >= 2
+                && byteBuffer[len - 2] == REQUEST_DELIMITER_CR // \r
+                && byteBuffer[len - 1] == REQUEST_DELIMITER_NL; // \n
     }
 
     @Override

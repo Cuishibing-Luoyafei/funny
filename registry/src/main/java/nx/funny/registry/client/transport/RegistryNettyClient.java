@@ -17,8 +17,6 @@ import nx.funny.registry.request.RegistryRequest;
 import nx.funny.registry.response.RegistryResponse;
 
 public class RegistryNettyClient implements RegistryClient {
-    private String serverAddress;
-    private int port;
 
     private final RegistryResponse[] responseContainer = new RegistryResponse[1];
 
@@ -27,8 +25,6 @@ public class RegistryNettyClient implements RegistryClient {
 
     @Override
     public void init(String serverAddress, int port) {
-        this.serverAddress = serverAddress;
-        this.port = port;
         workerGroup = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(workerGroup)
@@ -49,7 +45,6 @@ public class RegistryNettyClient implements RegistryClient {
             connectFuture.sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
     }
 
@@ -60,7 +55,7 @@ public class RegistryNettyClient implements RegistryClient {
             channelFuture.sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            return null;
         }
 
         RegistryResponse response = null;
@@ -85,10 +80,6 @@ public class RegistryNettyClient implements RegistryClient {
 
     @Override
     public void shutdown() {
-        try {
-            workerGroup.shutdownGracefully().sync();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        workerGroup.shutdownGracefully();
     }
 }

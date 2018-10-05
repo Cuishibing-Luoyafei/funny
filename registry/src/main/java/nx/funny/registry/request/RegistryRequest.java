@@ -1,8 +1,14 @@
 package nx.funny.registry.request;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import nx.funny.registry.ServicePosition;
 import nx.funny.registry.ServiceType;
 
+@Getter
+@Setter
+@ToString
 public class RegistryRequest {
     public static final int OPERATION_REGISTER = 0;
     public static final int OPERATION_REMOVE = 1;
@@ -13,27 +19,4 @@ public class RegistryRequest {
     private ServiceType type;
     private ServicePosition position;
 
-    public int getOperation() {
-        return operation;
-    }
-
-    public void setOperation(int operation) {
-        this.operation = operation;
-    }
-
-    public ServicePosition getPosition() {
-        return position;
-    }
-
-    public void setPosition(ServicePosition position) {
-        this.position = position;
-    }
-
-    public ServiceType getType() {
-        return type;
-    }
-
-    public void setType(ServiceType type) {
-        this.type = type;
-    }
 }

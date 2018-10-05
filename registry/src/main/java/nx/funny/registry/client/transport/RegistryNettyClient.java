@@ -1,4 +1,4 @@
-package nx.funny.registry.client;
+package nx.funny.registry.client.transport;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -9,11 +9,12 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
-import nx.funny.registry.client.decoder.ResponseDecoder;
-import nx.funny.registry.client.encoder.RequestEncoder;
-import nx.funny.registry.client.handler.RegistryResponseHandler;
+import nx.funny.registry.client.RegistryClient;
+import nx.funny.registry.client.transport.decoder.ResponseDecoder;
+import nx.funny.registry.client.transport.encoder.RequestEncoder;
 import nx.funny.registry.request.RegistryRequest;
 import nx.funny.registry.response.RegistryResponse;
+import nx.funny.registry.server.transport.RegistryResponseHandler;
 
 public class RegistryNettyClient implements RegistryClient {
     private String serverAddress;

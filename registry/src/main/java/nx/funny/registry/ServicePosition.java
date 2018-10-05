@@ -1,8 +1,15 @@
 package nx.funny.registry;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@Setter
+@ToString
 public class ServicePosition implements Serializable {
     private String ip;
     private int port;
@@ -29,19 +36,4 @@ public class ServicePosition implements Serializable {
         return false;
     }
 
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
 }

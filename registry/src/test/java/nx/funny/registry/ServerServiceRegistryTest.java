@@ -19,22 +19,22 @@ public class ServerServiceRegistryTest {
     @Test
     public void testRegister() {
         serviceRegistry.register(new ServiceInfo(Integer.class.getName(), "127.0.0.1", 9999));
-        Set<ServicePosition> positions = serviceRegistry.retrieve(new ServiceType(Integer.class.getName()));
-        Assert.assertTrue(positions.contains(new ServicePosition("127.0.0.1", 9999)));
+        Set<ServiceInfo> infos = serviceRegistry.retrieve(Integer.class.getName());
+        Assert.assertTrue(infos.contains(new ServiceInfo(Integer.class.getName(), "127.0.0.1", 9999)));
 
         serviceRegistry.register(new ServiceInfo(Integer.class.getName(), "127.0.0.2", 9999));
-        positions = serviceRegistry.retrieve(new ServiceType(Integer.class.getName()));
-        Assert.assertTrue(positions.contains(new ServicePosition("127.0.0.1", 9999)));
-        Assert.assertTrue(positions.contains(new ServicePosition("127.0.0.2", 9999)));
+        infos = serviceRegistry.retrieve(Integer.class.getName());
+        Assert.assertTrue(infos.contains(new ServiceInfo(Integer.class.getName(),"127.0.0.1", 9999)));
+        Assert.assertTrue(infos.contains(new ServiceInfo(Integer.class.getName(),"127.0.0.2", 9999)));
 
         serviceRegistry.remove(new ServiceInfo(Integer.class.getName(), "127.0.0.2", 9999));
-        positions = serviceRegistry.retrieve(new ServiceType(Integer.class.getName()));
-        Assert.assertTrue(positions.contains(new ServicePosition("127.0.0.1", 9999)));
-        Assert.assertTrue(!positions.contains(new ServicePosition("127.0.0.2", 9999)));
+        infos = serviceRegistry.retrieve(Integer.class.getName());
+        Assert.assertTrue(infos.contains(new ServiceInfo(Integer.class.getName(),"127.0.0.1", 9999)));
+        Assert.assertTrue(!infos.contains(new ServiceInfo(Integer.class.getName(),"127.0.0.2", 9999)));
 
         serviceRegistry.removeAll(new ServiceType(Integer.class.getName()));
-        positions = serviceRegistry.retrieve(new ServiceType(Integer.class.getName()));
-        Assert.assertTrue(positions == null);
+        infos = serviceRegistry.retrieve(Integer.class.getName());
+        Assert.assertTrue(infos != null && infos.size() == 0);
     }
 
 }

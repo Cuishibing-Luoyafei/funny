@@ -1,10 +1,10 @@
-package nx.funny.registry.server;
+package nx.funny.registry.server.transport;
 
 import nx.funny.registry.ServiceInfo;
-import nx.funny.registry.ServicePosition;
 import nx.funny.registry.ServiceRegistry;
 import nx.funny.registry.request.RegistryRequest;
 import nx.funny.registry.response.RegistryResponse;
+import nx.funny.registry.server.ServerServiceRegistry;
 
 import java.util.Set;
 
@@ -39,8 +39,8 @@ public class DefaultRequestProcessor implements RequestProcessor {
                 registry.removeAll(serviceInfo.getType());
                 break;
             case OPERATION_RETRIEVE:
-                Set<ServicePosition> positions = registry.retrieve(serviceInfo.getType());
-                response.setAddresses(positions);
+                Set<ServiceInfo> positions = registry.retrieve(serviceInfo.getType().getName());
+                response.setInfos(positions);
                 break;
         }
         return response;

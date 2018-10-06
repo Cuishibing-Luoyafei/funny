@@ -15,7 +15,7 @@ import nx.funny.registry.server.ServerServiceHeapRegistry;
  * */
 public class RegistryNettyServer implements RegistryServer {
     public static final int DEFAULT_PORT = 9527;
-    private int port = DEFAULT_PORT;
+    private int port;
 
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
@@ -32,6 +32,10 @@ public class RegistryNettyServer implements RegistryServer {
 
     public RegistryNettyServer(int port) {
         this(port, new ServerServiceHeapRegistry());// 默认是基于内存的注册中心
+    }
+
+    public RegistryNettyServer() {
+        this(DEFAULT_PORT);
     }
 
     @Override

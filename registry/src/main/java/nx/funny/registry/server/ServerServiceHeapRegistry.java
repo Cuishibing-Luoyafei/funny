@@ -15,14 +15,13 @@ import java.util.logging.Logger;
 /**
  * ServiceRegistry的服务端实现
  */
-public class ServerServiceRegistry implements ServiceRegistry {
+public class ServerServiceHeapRegistry implements ServiceRegistry {
 
     private Logger logger = Logger.getLogger(getClass().getName());
 
     private final ConcurrentHashMap<ServiceType, Set<ServicePosition>> serviceRegistry = new ConcurrentHashMap<>();
-    public static ServiceRegistry INSTANCE = new ServerServiceRegistry();
 
-    private ServerServiceRegistry() {
+    public ServerServiceHeapRegistry() {
     }
 
     @Override

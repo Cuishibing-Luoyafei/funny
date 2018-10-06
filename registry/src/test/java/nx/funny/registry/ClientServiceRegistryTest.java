@@ -7,6 +7,7 @@ import nx.funny.registry.client.transport.RegistryOioClient;
 import nx.funny.registry.request.RegistryRequest;
 import nx.funny.registry.response.RegistryResponse;
 import nx.funny.registry.server.RegistryServer;
+import nx.funny.registry.server.ServerServiceRedisRegistry;
 import nx.funny.registry.server.transport.RegistryNettyServer;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,7 +23,8 @@ public class ClientServiceRegistryTest {
 
     @Before
     public void before() {
-        registryServer = new RegistryNettyServer(9527);
+        registryServer = new RegistryNettyServer(9527, new ServerServiceRedisRegistry("localhost",
+                6379, null, null));
         registryClient = new RegistryOioClient();
     }
 
@@ -34,7 +36,7 @@ public class ClientServiceRegistryTest {
     @Test
     public void request() {
         RegistryRequest request = new RegistryRequest();
-        request.setOperation(RegistryRequest.OPERATION_RETRIEVE);
+        request.setOperation(RegistryRequest.OPERATION_REGISTER);
         request.setType(new ServiceType(Integer.class.getName()));
         request.setPosition(new ServicePosition("21.23.34.13", 9090));
         RegistryResponse response = registryClient.sendRequest(request);

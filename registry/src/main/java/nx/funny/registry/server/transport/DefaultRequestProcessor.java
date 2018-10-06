@@ -4,7 +4,6 @@ import nx.funny.registry.ServiceInfo;
 import nx.funny.registry.ServiceRegistry;
 import nx.funny.registry.request.RegistryRequest;
 import nx.funny.registry.response.RegistryResponse;
-import nx.funny.registry.server.ServerServiceRegistry;
 
 import java.util.Set;
 
@@ -13,10 +12,7 @@ import static nx.funny.registry.response.RegistryResponse.CODE_SUCCESS;
 
 public class DefaultRequestProcessor implements RequestProcessor {
 
-    private ServiceRegistry registry = ServerServiceRegistry.INSTANCE;
-
-    public DefaultRequestProcessor() {
-    }
+    private ServiceRegistry registry;
 
     public DefaultRequestProcessor(ServiceRegistry registry) {
         this.registry = registry;

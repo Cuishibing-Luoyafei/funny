@@ -9,12 +9,18 @@ import nx.funny.registry.server.transport.handler.RegistryRequestHandler;
 
 public class ServerChannelInitializer extends ChannelInitializer {
 
+    private RequestProcessor requestProcessor;
+
+    public ServerChannelInitializer(RequestProcessor requestProcessor) {
+        this.requestProcessor = requestProcessor;
+    }
+
     @Override
     protected void initChannel(Channel channel) throws Exception {
         channel.pipeline().addLast(
                 new LineBasedFrameDecoder(64 * 1024),
                 new RequestDecoder(),
-                new RegistryRequestHandler(),
+                new RegistryRequestHandler(requestProcessor),
                 new ResponseEncoder());
     }
 }

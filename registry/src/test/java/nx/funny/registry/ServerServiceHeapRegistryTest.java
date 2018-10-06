@@ -1,19 +1,19 @@
 package nx.funny.registry;
 
-import nx.funny.registry.server.ServerServiceRegistry;
+import nx.funny.registry.server.ServerServiceHeapRegistry;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Set;
 
-public class ServerServiceRegistryTest {
+public class ServerServiceHeapRegistryTest {
 
     private ServiceRegistry serviceRegistry;
 
     @Before
     public void before(){
-        serviceRegistry = ServerServiceRegistry.INSTANCE;
+        serviceRegistry = new ServerServiceHeapRegistry();
     }
 
     @Test

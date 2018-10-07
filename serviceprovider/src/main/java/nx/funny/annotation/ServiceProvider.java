@@ -12,16 +12,16 @@ import java.lang.annotation.*;
  * @author luoyafei
  * @date 2018-10-05
  */
-public @interface FunnyServiceProvider {
+public @interface ServiceProvider {
 
     /**
      * 服务名称
      */
-    String serviceName();
+    String name();
 
     /**
-     * 注册中心地址(ip:port)
+     * 服务实现类名称
      */
-    String serverServiceRegistryPath();
+    String typeName();
 
 }

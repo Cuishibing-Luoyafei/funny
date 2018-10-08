@@ -11,7 +11,8 @@ import java.util.Objects;
 @Setter
 @ToString
 public class ServiceType implements Serializable {
-    private String name;
+	private static final long serialVersionUID = 5148421138372099657L;
+	private String name;
     private String typeName;
 
     public ServiceType() {

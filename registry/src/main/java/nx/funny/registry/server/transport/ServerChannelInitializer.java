@@ -7,6 +7,7 @@ import nx.funny.registry.server.transport.decoder.RequestDecoder;
 import nx.funny.registry.server.transport.encoder.ResponseEncoder;
 import nx.funny.registry.server.transport.handler.RegistryRequestHandler;
 
+@SuppressWarnings("rawtypes")
 public class ServerChannelInitializer extends ChannelInitializer {
 
     private RequestProcessor requestProcessor;

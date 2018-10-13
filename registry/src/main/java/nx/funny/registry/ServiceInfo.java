@@ -1,14 +1,21 @@
 package nx.funny.registry;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * 服务的信息，类型和位置
  */
+@Getter
+@Setter
+@ToString
 public class ServiceInfo implements Serializable {
-
-    private ServiceType type;
+	private static final long serialVersionUID = 5850624516850445498L;
+	private ServiceType type;
     private ServicePosition position;
 
     public ServiceInfo() {
@@ -19,8 +26,8 @@ public class ServiceInfo implements Serializable {
         this.position = position;
     }
 
-    public ServiceInfo(String typeName, String ip, int port) {
-        this(new ServiceType(typeName),
+    public ServiceInfo(String name, String ip, int port) {
+        this(new ServiceType(name),
                 new ServicePosition(ip, port));
     }
 
@@ -39,19 +46,4 @@ public class ServiceInfo implements Serializable {
         return false;
     }
 
-    public ServiceType getType() {
-        return type;
-    }
-
-    public void setType(ServiceType type) {
-        this.type = type;
-    }
-
-    public ServicePosition getPosition() {
-        return position;
-    }
-
-    public void setPosition(ServicePosition position) {
-        this.position = position;
-    }
 }

@@ -1,7 +1,6 @@
 package nx.funny.registry.client;
 
 import nx.funny.registry.ServiceInfo;
-import nx.funny.registry.ServicePosition;
 import nx.funny.registry.ServiceRegistry;
 import nx.funny.registry.ServiceType;
 import nx.funny.registry.request.RegistryRequest;
@@ -25,28 +24,41 @@ public class ClientServiceRegistry implements ServiceRegistry {
         return request;
     }
 
+    private void processResponse(RegistryResponse response) {
+        if (response.getCode() != RegistryResponse.CODE_SUCCESS) {
+            String msg = response.getMsg();
+            throw new RuntimeException("Registry exception:" + (msg == null ? "" : msg));
+        }
+    }
+
     @Override
     public void register(ServiceInfo info) {
         RegistryRequest request = generateRequest(info, RegistryRequest.OPERATION_REGISTER);
-        client.sendRequest(request);
+        RegistryResponse response = client.sendRequest(request);
+        processResponse(response);
     }
 
     @Override
     public void remove(ServiceInfo info) {
         RegistryRequest request = generateRequest(info, RegistryRequest.OPERATION_REMOVE);
-        client.sendRequest(request);
+        RegistryResponse response = client.sendRequest(request);
+        processResponse(response);
     }
 
     @Override
     public void removeAll(ServiceType type) {
         RegistryRequest request = generateRequest(new ServiceInfo(type, null), RegistryRequest.OPERATION_REMOVE_ALL);
-        client.sendRequest(request);
+        RegistryResponse response = client.sendRequest(request);
+        processResponse(response);
     }
 
     @Override
-    public Set<ServicePosition> retrieve(ServiceType type) {
+    public Set<ServiceInfo> retrieve(String name) {
+        ServiceType type = new ServiceType();
+        type.setName(name);
         RegistryRequest request = generateRequest(new ServiceInfo(type, null), RegistryRequest.OPERATION_RETRIEVE);
         RegistryResponse response = client.sendRequest(request);
-        return response.getAddresses();
+        processResponse(response);
+        return response.getInfos();
     }
 }

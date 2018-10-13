@@ -3,11 +3,12 @@ package nx.funny.registry;
 import com.google.gson.Gson;
 import nx.funny.registry.client.ClientServiceRegistry;
 import nx.funny.registry.client.RegistryClient;
-import nx.funny.registry.client.RegistryNettyClient;
+import nx.funny.registry.client.transport.RegistryOioClient;
 import nx.funny.registry.request.RegistryRequest;
 import nx.funny.registry.response.RegistryResponse;
-import nx.funny.registry.server.RegistryNettyServer;
 import nx.funny.registry.server.RegistryServer;
+import nx.funny.registry.server.ServerServiceRedisRegistry;
+import nx.funny.registry.server.transport.RegistryNettyServer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +23,9 @@ public class ClientServiceRegistryTest {
 
     @Before
     public void before() {
-        registryServer = new RegistryNettyServer(9527);
-        registryClient = new RegistryNettyClient();
+        registryServer = new RegistryNettyServer(9527, new ServerServiceRedisRegistry("localhost",
+                6379, null, null));
+        registryClient = new RegistryOioClient();
     }
 
     @Test
@@ -34,7 +36,7 @@ public class ClientServiceRegistryTest {
     @Test
     public void request() {
         RegistryRequest request = new RegistryRequest();
-        request.setOperation(RegistryRequest.OPERATION_RETRIEVE);
+        request.setOperation(RegistryRequest.OPERATION_REGISTER);
         request.setType(new ServiceType(Integer.class.getName()));
         request.setPosition(new ServicePosition("21.23.34.13", 9090));
         RegistryResponse response = registryClient.sendRequest(request);
@@ -47,21 +49,21 @@ public class ClientServiceRegistryTest {
         ServiceRegistry serviceRegistry = new ClientServiceRegistry(registryClient);
 
         serviceRegistry.register(new ServiceInfo(Integer.class.getName(), "127.0.0.1", 9999));
-        Set<ServicePosition> positions = serviceRegistry.retrieve(new ServiceType(Integer.class.getName()));
-        Assert.assertTrue(positions.contains(new ServicePosition("127.0.0.1", 9999)));
+        Set<ServiceInfo> infos = serviceRegistry.retrieve(Integer.class.getName());
+        Assert.assertTrue(infos.contains(new ServiceInfo(Integer.class.getName(), "127.0.0.1", 9999)));
 
         serviceRegistry.register(new ServiceInfo(Integer.class.getName(), "127.0.0.2", 9999));
-        positions = serviceRegistry.retrieve(new ServiceType(Integer.class.getName()));
-        Assert.assertTrue(positions.contains(new ServicePosition("127.0.0.1", 9999)));
-        Assert.assertTrue(positions.contains(new ServicePosition("127.0.0.2", 9999)));
+        infos = serviceRegistry.retrieve(Integer.class.getName());
+        Assert.assertTrue(infos.contains(new ServiceInfo(Integer.class.getName(),"127.0.0.1", 9999)));
+        Assert.assertTrue(infos.contains(new ServiceInfo(Integer.class.getName(),"127.0.0.2", 9999)));
 
         serviceRegistry.remove(new ServiceInfo(Integer.class.getName(), "127.0.0.2", 9999));
-        positions = serviceRegistry.retrieve(new ServiceType(Integer.class.getName()));
-        Assert.assertTrue(positions.contains(new ServicePosition("127.0.0.1", 9999)));
-        Assert.assertTrue(!positions.contains(new ServicePosition("127.0.0.2", 9999)));
+        infos = serviceRegistry.retrieve(Integer.class.getName());
+        Assert.assertTrue(infos.contains(new ServiceInfo(Integer.class.getName(),"127.0.0.1", 9999)));
+        Assert.assertTrue(!infos.contains(new ServiceInfo(Integer.class.getName(),"127.0.0.2", 9999)));
 
         serviceRegistry.removeAll(new ServiceType(Integer.class.getName()));
-        positions = serviceRegistry.retrieve(new ServiceType(Integer.class.getName()));
-        Assert.assertTrue(positions == null);
+        infos = serviceRegistry.retrieve(Integer.class.getName());
+        Assert.assertTrue(infos != null && infos.size() == 0);
     }
 }

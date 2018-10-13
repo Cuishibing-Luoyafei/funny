@@ -10,6 +10,6 @@ public interface ServiceRegistry {
 
     void removeAll(ServiceType type);
 
-    Set<ServicePosition> retrieve(ServiceType type);
+    Set<ServiceInfo> retrieve(String name);
 
 }

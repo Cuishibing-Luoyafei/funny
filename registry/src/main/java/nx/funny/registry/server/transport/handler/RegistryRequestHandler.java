@@ -4,16 +4,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import nx.funny.registry.request.RegistryRequest;
 import nx.funny.registry.response.RegistryResponse;
-import nx.funny.registry.server.transport.DefaultRequestProcessor;
 import nx.funny.registry.server.transport.RequestProcessor;
 
 public class RegistryRequestHandler extends SimpleChannelInboundHandler<RegistryRequest> {
 
     private RequestProcessor handler;
-
-    public RegistryRequestHandler() {
-        handler = new DefaultRequestProcessor();
-    }
 
     public RegistryRequestHandler(RequestProcessor handler) {
         this.handler = handler;
@@ -38,4 +33,5 @@ public class RegistryRequestHandler extends SimpleChannelInboundHandler<Registry
     public void setHandler(RequestProcessor handler) {
         this.handler = handler;
     }
+
 }

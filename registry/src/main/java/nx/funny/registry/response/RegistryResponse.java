@@ -12,8 +12,8 @@ import java.util.Set;
 @Setter
 @ToString
 public class RegistryResponse implements Serializable {
-
-    public static final int CODE_SUCCESS = 0;
+	private static final long serialVersionUID = -9211702057437656081L;
+	public static final int CODE_SUCCESS = 0;
     public static final int CODE_FAIL = 1;
 
     private int code;

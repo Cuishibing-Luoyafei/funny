@@ -11,7 +11,8 @@ import java.util.Objects;
 @Setter
 @ToString
 public class ServicePosition implements Serializable {
-    private String ip;
+	private static final long serialVersionUID = 5419505658728330368L;
+	private String ip;
     private int port;
 
     public ServicePosition() {

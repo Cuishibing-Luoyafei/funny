@@ -14,8 +14,8 @@ import java.util.Objects;
 @Setter
 @ToString
 public class ServiceInfo implements Serializable {
-
-    private ServiceType type;
+	private static final long serialVersionUID = 5850624516850445498L;
+	private ServiceType type;
     private ServicePosition position;
 
     public ServiceInfo() {

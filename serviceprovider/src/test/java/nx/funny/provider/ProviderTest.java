@@ -3,8 +3,6 @@ package nx.funny.provider;/**
  * @date new Date()
  */
 
-import nx.funny.provider.service.IServiceProvider;
-import nx.funny.provider.service.impl.ServiceProviderImpl;
 import org.junit.Test;
 
 /**
@@ -16,7 +14,5 @@ public class ProviderTest {
 
     @Test
     public void test() {
-        IServiceProvider provider = new ServiceProviderImpl();
-        provider.register();
     }
 }

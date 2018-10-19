@@ -1,41 +1,23 @@
 package nx.funny.provider.transport.impl;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import nx.funny.provider.transport.Message;
 
 /**
  * 用字符串传递消息
  */
+@Getter
+@Setter
+@ToString
 public class StringMessage implements Message {
 
     private int messageType;
     private int messageLength;
     private byte[] messageBody;
 
-    @Override
-    public int getMessageType() {
-        return messageType;
+    public String getMessage() {
+        return new String(messageBody);
     }
-
-    @Override
-    public int getMessageLength() {
-        return messageLength;
-    }
-
-    @Override
-    public byte[] getMessageBody() {
-        return messageBody;
-    }
-
-    public void setMessageType(int messageType) {
-        this.messageType = messageType;
-    }
-
-    public void setMessageLength(int messageLength) {
-        this.messageLength = messageLength;
-    }
-
-    public void setMessageBody(byte[] messageBody) {
-        this.messageBody = messageBody;
-    }
-
 }

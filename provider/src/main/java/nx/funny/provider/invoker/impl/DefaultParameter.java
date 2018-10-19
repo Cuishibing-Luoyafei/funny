@@ -1,29 +1,27 @@
 package nx.funny.provider.invoker.impl;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import nx.funny.provider.invoker.Parameter;
 
+@Getter
+@Setter
+@ToString
 public class DefaultParameter implements Parameter {
 
     private String type;
     private Object value;
 
-    @Override
-    public String getType() {
-        return type;
+    public DefaultParameter() {
     }
 
-    @Override
-    public Object getValue() {
-        return value;
+    public DefaultParameter(Class<?> clazz, Object value) {
+        this(clazz.getName(), value);
     }
 
-    public void setType(String type) {
+    public DefaultParameter(String type, Object value) {
         this.type = type;
-    }
-
-    public void setValue(Object value) {
         this.value = value;
     }
-
-
 }

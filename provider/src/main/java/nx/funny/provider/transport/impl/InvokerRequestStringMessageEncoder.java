@@ -8,7 +8,8 @@ import nx.funny.provider.transport.MessageEncoder;
 /**
  * InvokerRequest -> StringMessage
  */
-public class InvokerRequestStringMessageEncoder implements MessageEncoder<InvokerRequest, StringMessage> {
+public class InvokerRequestStringMessageEncoder implements
+        MessageEncoder<InvokerRequest, StringMessage> {
     private Gson gson = new Gson();
 
     @Override

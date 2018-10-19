@@ -1,9 +1,9 @@
-package nx.funny.provider.transport.impl;
+package nx.funny.transporter.impl;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import nx.funny.provider.transport.Message;
+import nx.funny.transporter.Message;
 
 /**
  * 用字符串传递消息

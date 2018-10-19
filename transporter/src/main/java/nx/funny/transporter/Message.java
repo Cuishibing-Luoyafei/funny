@@ -1,4 +1,4 @@
-package nx.funny.provider.transport;
+package nx.funny.transporter;
 
 /**
  * 远程调用通信统一消息接口

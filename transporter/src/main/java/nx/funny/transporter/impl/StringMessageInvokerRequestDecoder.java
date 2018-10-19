@@ -1,11 +1,9 @@
-package nx.funny.provider.transport.impl;
+package nx.funny.transporter.impl;
 
 import com.google.gson.*;
-import nx.funny.provider.invoker.InvokerRequest;
-import nx.funny.provider.invoker.Parameter;
-import nx.funny.provider.invoker.impl.DefaultInvokerRequest;
-import nx.funny.provider.invoker.impl.DefaultParameter;
-import nx.funny.provider.transport.MessageDecoder;
+import nx.funny.transporter.InvokerRequest;
+import nx.funny.transporter.MessageDecoder;
+import nx.funny.transporter.Parameter;
 
 import java.lang.reflect.Type;
 

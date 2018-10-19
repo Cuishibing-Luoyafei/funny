@@ -1,4 +1,4 @@
-package nx.funny.provider.invoker;
+package nx.funny.transporter;
 
 /**
  * 方法调用的参数和返回值

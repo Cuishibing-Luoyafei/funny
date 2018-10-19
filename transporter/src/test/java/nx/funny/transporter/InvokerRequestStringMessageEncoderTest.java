@@ -1,7 +1,8 @@
-package nx.funny.provider.transport;
+package nx.funny.transporter;
 
-import nx.funny.provider.invoker.impl.DefaultInvokerRequest;
-import nx.funny.provider.invoker.impl.DefaultParameter;
+
+import nx.funny.transporter.impl.DefaultInvokerRequest;
+import nx.funny.transporter.impl.DefaultParameter;
 import nx.funny.transporter.impl.InvokerRequestStringMessageEncoder;
 import nx.funny.transporter.impl.StringMessage;
 import org.junit.Before;

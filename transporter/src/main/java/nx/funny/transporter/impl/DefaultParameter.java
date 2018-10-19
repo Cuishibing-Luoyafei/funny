@@ -1,9 +1,10 @@
-package nx.funny.provider.invoker.impl;
+package nx.funny.transporter.impl;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import nx.funny.provider.invoker.Parameter;
+import nx.funny.transporter.Parameter;
+
 
 @Getter
 @Setter

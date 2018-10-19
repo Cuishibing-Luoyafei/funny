@@ -1,4 +1,4 @@
-package nx.funny.provider.transport;
+package nx.funny.transporter;
 
 /**
  * 消息编码者，把T类型的数据编码成Message

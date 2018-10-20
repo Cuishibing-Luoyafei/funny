@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 解析服务提供者的信息，并注册信息到注册中心
  * 如果要注册的类有ServiceProvider注解，则优先使用注解的信息
- *
+ * <p>
  * 该类应该为单例模式
  */
 public class ServiceProviderRegister {

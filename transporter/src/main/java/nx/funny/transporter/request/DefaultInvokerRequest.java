@@ -27,11 +27,11 @@ public class DefaultInvokerRequest implements InvokerRequest {
      * 默认type和typeName相同
      */
     public void setType(Class<?> clazz) {
-        type = clazz.getName();
-        typeName = type;
+        setType(clazz.getName());
     }
 
     public void setType(String type) {
         this.type = type;
+        this.typeName = type;
     }
 }

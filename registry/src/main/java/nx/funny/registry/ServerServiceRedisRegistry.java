@@ -1,11 +1,7 @@
-package nx.funny.registry.server;
+package nx.funny.registry;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import nx.funny.registry.ServiceInfo;
-import nx.funny.registry.ServicePosition;
-import nx.funny.registry.ServiceRegistry;
-import nx.funny.registry.ServiceType;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 

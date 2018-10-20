@@ -1,9 +1,4 @@
-package nx.funny.registry.server;
-
-import nx.funny.registry.ServiceInfo;
-import nx.funny.registry.ServicePosition;
-import nx.funny.registry.ServiceRegistry;
-import nx.funny.registry.ServiceType;
+package nx.funny.registry;
 
 import java.util.HashSet;
 import java.util.Map;

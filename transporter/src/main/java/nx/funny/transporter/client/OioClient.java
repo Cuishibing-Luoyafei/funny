@@ -42,12 +42,6 @@ public class OioClient implements Client, Closeable {
         messageDecoder = new StringMessageInvokerResponseDecoder();
     }
 
-    public OioClient(MessageEncoder<InvokerRequest, StringMessage> messageEncoder,
-                     MessageDecoder<StringMessage, InvokerResponse> messageDecoder) {
-        this.messageEncoder = messageEncoder;
-        this.messageDecoder = messageDecoder;
-    }
-
     @Override
     public void connect(String ip, int port) throws IOException {
         socket = new Socket(ip, port);
@@ -74,6 +68,7 @@ public class OioClient implements Client, Closeable {
 
     @Override
     public void close() throws IOException {
-        socket.close();
+        if (socket != null && !socket.isClosed())
+            socket.close();
     }
 }

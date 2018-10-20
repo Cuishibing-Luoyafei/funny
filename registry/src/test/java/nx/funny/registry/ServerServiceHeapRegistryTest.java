@@ -1,6 +1,5 @@
 package nx.funny.registry;
 
-import nx.funny.registry.server.ServerServiceHeapRegistry;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

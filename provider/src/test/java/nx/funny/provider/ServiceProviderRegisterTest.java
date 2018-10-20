@@ -1,7 +1,8 @@
 package nx.funny.provider;
 
+import nx.funny.provider.register.ServiceProviderRegister;
+import nx.funny.registry.ClientServiceRegistry;
 import nx.funny.registry.ServiceRegistry;
-import nx.funny.registry.client.ClientServiceRegistry;
 import nx.funny.registry.client.RegistryClient;
 import nx.funny.registry.client.transport.RegistryOioClient;
 import org.junit.Before;

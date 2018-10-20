@@ -1,9 +1,8 @@
-package nx.funny.transporter.impl;
+package nx.funny.transporter.parameter;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import nx.funny.transporter.Parameter;
 
 
 @Getter

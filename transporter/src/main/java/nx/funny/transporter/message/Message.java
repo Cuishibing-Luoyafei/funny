@@ -1,4 +1,6 @@
-package nx.funny.transporter;
+package nx.funny.transporter.message;
+
+import io.netty.buffer.ByteBuf;
 
 /**
  * 远程调用通信统一消息接口
@@ -26,4 +28,10 @@ public interface Message {
      * 获取消息内容
      */
     byte[] getMessageBody();
+
+    /**
+     * 写出消息的内容
+     */
+    void write(ByteBuf buffer);
+
 }

@@ -1,4 +1,6 @@
-package nx.funny.transporter;
+package nx.funny.transporter.request;
+
+import nx.funny.transporter.parameter.Parameter;
 
 import java.util.List;
 

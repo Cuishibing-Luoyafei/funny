@@ -1,9 +1,9 @@
-package nx.funny.transporter.impl;
+package nx.funny.transporter.request;
 
 import com.google.gson.Gson;
-import nx.funny.transporter.InvokerRequest;
-import nx.funny.transporter.Message;
 import nx.funny.transporter.MessageEncoder;
+import nx.funny.transporter.message.Message;
+import nx.funny.transporter.message.StringMessage;
 
 
 /**

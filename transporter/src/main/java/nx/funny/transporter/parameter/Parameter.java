@@ -1,8 +1,7 @@
-package nx.funny.transporter;
+package nx.funny.transporter.parameter;
 
 /**
- * 方法调用的参数和返回值
- * T 为表示参数值使用的类型。例如：使用JSON形式传递，T就为String等
+ * 用来表示方法的参数和返回值
  */
 public interface Parameter {
     /**

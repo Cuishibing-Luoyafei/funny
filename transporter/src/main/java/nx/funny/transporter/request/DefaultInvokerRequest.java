@@ -12,7 +12,10 @@ import java.util.List;
 public class DefaultInvokerRequest implements InvokerRequest {
 
     @Getter
-    private String serviceType;
+    private String type;
+    @Getter
+    @Setter
+    private String typeName;
     @Getter
     @Setter
     private String methodName;
@@ -20,11 +23,15 @@ public class DefaultInvokerRequest implements InvokerRequest {
     @Setter
     private List<Parameter> parameters;
 
-    public void setServiceType(Class<?> clazz) {
-        serviceType = clazz.getName();
+    /**
+     * 默认type和typeName相同
+     */
+    public void setType(Class<?> clazz) {
+        type = clazz.getName();
+        typeName = type;
     }
 
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
+    public void setType(String type) {
+        this.type = type;
     }
 }

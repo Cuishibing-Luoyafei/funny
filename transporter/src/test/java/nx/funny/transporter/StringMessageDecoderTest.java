@@ -42,7 +42,7 @@ public class StringMessageDecoderTest {
         msgParam.setMessageLength(12);
 
         DefaultInvokerRequest request1 = new DefaultInvokerRequest();
-        request1.setServiceType(this.getClass().getName());
+        request1.setType(this.getClass().getName());
         request1.setMethodName("toString");
         request1.setParameters(Arrays.asList(new DefaultParameter(Integer.class, 12),
                 new DefaultParameter(String.class, "abcdefg崔士兵"),
@@ -60,7 +60,7 @@ public class StringMessageDecoderTest {
     @Test
     public void testNoParameterRequestEncoder() {
         DefaultInvokerRequest request1 = new DefaultInvokerRequest();
-        request1.setServiceType(this.getClass());
+        request1.setType(this.getClass());
         request1.setMethodName("toString");
         StringMessage message = requestEncoder.encode(request1);
 

@@ -12,7 +12,12 @@ public interface InvokerRequest {
     /**
      * 获取服务类型
      */
-    String getServiceType();
+    String getType();
+
+    /**
+     * 获取服务实现类
+     */
+    String getTypeName();
 
     /**
      * 获取方法名

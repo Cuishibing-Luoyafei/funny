@@ -28,7 +28,7 @@ public class StringMessageEncoderTest {
     @Test
     public void testInvokerRequestEncode() {
         DefaultInvokerRequest request = new DefaultInvokerRequest();
-        request.setServiceType(this.getClass().getName());
+        request.setType(this.getClass().getName());
         request.setMethodName("toString");
         request.setParameters(Arrays.asList(new DefaultParameter(Integer.class.getName(), 12)));
         StringMessage message = requestEncoder.encode(request);

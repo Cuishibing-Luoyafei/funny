@@ -27,15 +27,23 @@ public class DefaultProxyFactory implements ProxyFactory {
         serviceRegistry = getProxy(ServiceRegistry.class,new ServicePosition(registryIp,registryPort));
     }
 
-//    public DefaultProxyFactory(ServiceRegistry serviceRegistry) {
-//        this.serviceRegistry = serviceRegistry;
-//    }
-
     public <T> T getProxy(Class<T> clazz) {
         Object o = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                 new Class[]{clazz}, new InvocationHandler() {
                     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                         String name = clazz.getName();
+                        Set<ServiceInfo> serviceInfos = serviceRegistry.retrieve(name);
+                        ServiceInfo serviceInfo = (ServiceInfo) serviceInfos.toArray()[new Random().nextInt(serviceInfos.size())];
+                        return DefaultProxyFactory.invoke(name,serviceInfo.getType().getTypeName(), method.getName(), serviceInfo.getPosition(), args);
+                    }
+                });
+        return (T) o;
+    }
+
+    public <T> T getProxy(String name,Class<T> clazz) {
+        Object o = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                new Class[]{clazz}, new InvocationHandler() {
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                         Set<ServiceInfo> serviceInfos = serviceRegistry.retrieve(name);
                         ServiceInfo serviceInfo = (ServiceInfo) serviceInfos.toArray()[new Random().nextInt(serviceInfos.size())];
                         return DefaultProxyFactory.invoke(name,serviceInfo.getType().getTypeName(), method.getName(), serviceInfo.getPosition(), args);

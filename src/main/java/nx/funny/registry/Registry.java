@@ -1,7 +1,7 @@
 package nx.funny.registry;
 
 import nx.funny.provider.ServicePositionProvider;
-import nx.funny.provider.register.ServiceProviderRegister;
+import nx.funny.provider.register.Register;
 import nx.funny.provider.server.ProviderRequestProcessor;
 import nx.funny.transporter.server.NioServer;
 
@@ -9,7 +9,7 @@ public class Registry {
 
     public static void init(String ip,int port,ServiceRegistry serviceRegistry){
         ServicePositionProvider positionProvider = () -> new ServicePosition(ip,port);
-        ServiceProviderRegister register = new ServiceProviderRegister(positionProvider,
+        Register register = new Register(positionProvider,
                 serviceRegistry);
         // 注册自己
         register.register(ServiceRegistry.class, typeName -> serviceRegistry);

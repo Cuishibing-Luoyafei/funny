@@ -1,8 +1,9 @@
 package nx.funny.provider.server;
 
 import lombok.Setter;
-import nx.funny.provider.register.ServiceProviderRegister;
+import nx.funny.provider.register.Register;
 import nx.funny.provider.register.ServiceTargetFactory;
+import nx.funny.registry.ServiceType;
 import nx.funny.transporter.exception.InvokeException;
 import nx.funny.transporter.parameter.DefaultParameter;
 import nx.funny.transporter.parameter.Parameter;
@@ -18,20 +19,20 @@ import java.util.List;
 public class ProviderRequestProcessor implements InvokerRequestProcessor {
 
     @Setter
-    private ServiceProviderRegister register;
+    private Register register;
 
     public ProviderRequestProcessor() {
     }
 
-    public ProviderRequestProcessor(ServiceProviderRegister register) {
+    public ProviderRequestProcessor(Register register) {
         this.register = register;
     }
 
     @Override
     public InvokerResponse processRequest(InvokerRequest request) {
-        String typeName = request.getTypeName();
-        ServiceTargetFactory targetFactory = register.getTargetFactory(typeName);
-        Object serviceTarget = targetFactory.getServiceTarget(typeName);
+        ServiceType type = new ServiceType(request.getType(), request.getTypeName());
+        ServiceTargetFactory targetFactory = register.getTargetFactory(type);
+        Object serviceTarget = targetFactory.getServiceTarget(type);
         DefaultInvokerResponse response = new DefaultInvokerResponse();
         try {
             Method method = findMethod(serviceTarget, request);

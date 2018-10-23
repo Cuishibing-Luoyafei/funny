@@ -1,5 +1,6 @@
 package nx.funny.provider.server;
 
+import nx.funny.provider.register.Register;
 import nx.funny.transporter.server.NioServer;
 
 /**
@@ -7,8 +8,8 @@ import nx.funny.transporter.server.NioServer;
  */
 public class ProviderServer extends NioServer {
 
-    public ProviderServer() {
-        ProviderRequestProcessor requestProcessor = new ProviderRequestProcessor();
+    public ProviderServer(Register register) {
+        ProviderRequestProcessor requestProcessor = new ProviderRequestProcessor(register);
         setRequestProcessor(requestProcessor);
     }
 }

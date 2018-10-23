@@ -1,21 +1,21 @@
 package nx.funny.provider;
 
 import nx.funny.consumer.DefaultProxyFactory;
-import nx.funny.provider.register.ServiceProviderRegister;
+import nx.funny.provider.register.Register;
 import nx.funny.registry.ServicePosition;
 import nx.funny.registry.ServiceRegistry;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ServiceProviderRegisterTest {
+public class RegisterTest {
 
-    private ServiceProviderRegister register;
+    private Register register;
 
     @Before
     public void before(){
         ServicePositionProvider positionProvider = () -> new ServicePosition("localhost",9528);
         ServiceRegistry serviceRegistry = new DefaultProxyFactory("localhost",9527).getServiceRegistry();
-        register = new ServiceProviderRegister(positionProvider,serviceRegistry);
+        register = new Register(positionProvider,serviceRegistry);
     }
 
     @Test

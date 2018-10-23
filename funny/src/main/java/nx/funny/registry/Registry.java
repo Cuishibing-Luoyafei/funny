@@ -1,8 +1,8 @@
 package nx.funny.registry;
 
-import nx.funny.provider.ServicePositionProvider;
-import nx.funny.provider.register.Register;
-import nx.funny.provider.server.ProviderRequestProcessor;
+import nx.funny.sampleprovider.ServicePositionProvider;
+import nx.funny.sampleprovider.register.Register;
+import nx.funny.sampleprovider.server.ProviderRequestProcessor;
 import nx.funny.transporter.server.NioServer;
 
 public class Registry {

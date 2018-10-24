@@ -1,4 +1,4 @@
-package nx.funny.sampleprovider;
+package nx.funny.provider;
 
 import nx.funny.registry.ServicePosition;
 

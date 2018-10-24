@@ -1,11 +1,11 @@
-package nx.funny.sampleprovider.register;
+package nx.funny.provider.register;
 
 import lombok.Getter;
 import lombok.Setter;
-import nx.funny.sampleconsumer.DefaultProxyFactory;
-import nx.funny.sampleconsumer.ProxyFactory;
-import nx.funny.sampleprovider.ServicePositionProvider;
-import nx.funny.sampleprovider.ServiceProvider;
+import nx.funny.consumer.DefaultProxyFactory;
+import nx.funny.consumer.ProxyFactory;
+import nx.funny.provider.ServicePositionProvider;
+import nx.funny.provider.ServiceProvider;
 import nx.funny.registry.ServiceInfo;
 import nx.funny.registry.ServicePosition;
 import nx.funny.registry.ServiceRegistry;

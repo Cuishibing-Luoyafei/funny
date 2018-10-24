@@ -1,4 +1,4 @@
-package nx.funny.sampleconsumer;
+package nx.funny.consumer;
 
 public interface RpcTestInterface {
     String sayHello();

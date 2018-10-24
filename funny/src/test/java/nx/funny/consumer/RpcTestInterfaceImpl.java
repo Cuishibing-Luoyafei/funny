@@ -1,6 +1,6 @@
-package nx.funny.sampleconsumer;
+package nx.funny.consumer;
 
-import nx.funny.sampleprovider.ServiceProvider;
+import nx.funny.provider.ServiceProvider;
 
 public @ServiceProvider("RpcTestInterface")
 class RpcTestInterfaceImpl implements RpcTestInterface{

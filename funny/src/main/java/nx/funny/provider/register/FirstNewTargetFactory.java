@@ -1,4 +1,4 @@
-package nx.funny.sampleprovider.register;
+package nx.funny.provider.register;
 
 import nx.funny.registry.ServiceType;
 

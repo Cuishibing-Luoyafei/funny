@@ -1,7 +1,6 @@
-package nx.funny.sampleprovider.server;
+package nx.funny.provider.server;
 
-import nx.funny.registry.Registry;
-import nx.funny.sampleprovider.register.Register;
+import nx.funny.provider.register.Register;
 import nx.funny.transporter.server.NioServer;
 
 /**

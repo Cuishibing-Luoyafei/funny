@@ -1,7 +1,7 @@
-package nx.funny.sampleconsumer;
+package nx.funny.consumer;
 
-import nx.funny.sampleprovider.register.Register;
-import nx.funny.sampleprovider.server.ProviderServer;
+import nx.funny.provider.register.Register;
+import nx.funny.provider.server.ProviderServer;
 import org.junit.Before;
 import org.junit.Test;
 

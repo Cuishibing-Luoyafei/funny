@@ -1,7 +1,7 @@
-package nx.funny.sampleprovider;
+package nx.funny.provider;
 
-import nx.funny.sampleconsumer.DefaultProxyFactory;
-import nx.funny.sampleprovider.register.Register;
+import nx.funny.consumer.DefaultProxyFactory;
+import nx.funny.provider.register.Register;
 import nx.funny.registry.ServicePosition;
 import nx.funny.registry.ServiceRegistry;
 import org.junit.Before;

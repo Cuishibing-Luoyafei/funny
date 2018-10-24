@@ -1,4 +1,4 @@
-package nx.funny.sampleconsumer;
+package nx.funny.consumer;
 
 import lombok.Getter;
 import nx.funny.registry.ServiceInfo;

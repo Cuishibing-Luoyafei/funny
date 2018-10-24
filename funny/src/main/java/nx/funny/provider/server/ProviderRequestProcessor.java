@@ -1,8 +1,8 @@
-package nx.funny.sampleprovider.server;
+package nx.funny.provider.server;
 
 import lombok.Setter;
-import nx.funny.sampleprovider.register.Register;
-import nx.funny.sampleprovider.register.ServiceTargetFactory;
+import nx.funny.provider.register.Register;
+import nx.funny.provider.register.ServiceTargetFactory;
 import nx.funny.registry.ServiceType;
 import nx.funny.transporter.exception.InvokeException;
 import nx.funny.transporter.parameter.DefaultParameter;

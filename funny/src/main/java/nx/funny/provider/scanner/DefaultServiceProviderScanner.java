@@ -1,4 +1,4 @@
-package nx.funny.sampleprovider.scanner;
+package nx.funny.provider.scanner;
 
 import java.io.File;
 import java.net.URL;

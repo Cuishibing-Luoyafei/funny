@@ -3,6 +3,7 @@ package nx.funny.registry;
 import nx.funny.sampleprovider.ServicePositionProvider;
 import nx.funny.sampleprovider.register.Register;
 import nx.funny.sampleprovider.server.ProviderRequestProcessor;
+import nx.funny.sampleprovider.server.ProviderServer;
 import nx.funny.transporter.server.NioServer;
 
 public class Registry {
@@ -12,9 +13,9 @@ public class Registry {
         Register register = new Register(positionProvider,
                 serviceRegistry);
         // 注册自己
-        register.register(ServiceRegistry.class, typeName -> serviceRegistry);
-        NioServer server = new NioServer(new ProviderRequestProcessor(register));
-        server.start(9527);
+        register.register(ServiceRegistry.class, serviceRegistry);
+        ProviderServer server = new ProviderServer(register);
+        server.start();
     }
 
     public static void main(String[] args) {

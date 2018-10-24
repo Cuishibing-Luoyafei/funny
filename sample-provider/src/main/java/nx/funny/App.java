@@ -14,6 +14,6 @@ public class App {
         register.register(SampleProviderInterfaceImpl.class);
 
         ProviderServer server = new ProviderServer(register);
-        server.start(9528);
+        server.start();
     }
 }

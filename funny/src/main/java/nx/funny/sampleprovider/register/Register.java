@@ -1,5 +1,6 @@
 package nx.funny.sampleprovider.register;
 
+import lombok.Getter;
 import lombok.Setter;
 import nx.funny.sampleconsumer.DefaultProxyFactory;
 import nx.funny.sampleconsumer.ProxyFactory;
@@ -21,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Register {
 
+    @Getter
     @Setter
     private ServicePositionProvider positionProvider;
 

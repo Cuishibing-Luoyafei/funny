@@ -1,21 +1,29 @@
 package nx.funny;
 
+import nx.funny.provider.register.Register;
+import nx.funny.provider.server.ProviderServer;
 import nx.funny.sampleprovider.SampleProviderInterfaceImpl;
 import nx.funny.sampleprovider.SampleProviderInterfaceImpl2;
-import nx.funny.sampleprovider.register.Register;
-import nx.funny.sampleprovider.server.ProviderServer;
+
 
 /**
  * Hello world!
  */
 public class App {
     public static void main(String[] args) {
+        // 根据注册中心地址和自身服务地址生成注册者对象
         Register register = new Register("localhost",9527,
                 "localhost",9528);
+
+        // 注册实现1
         register.register(SampleProviderInterfaceImpl.class);
+
+        // 注册实现2
         register.register(SampleProviderInterfaceImpl2.class);
 
         ProviderServer server = new ProviderServer(register);
+
+        // 启动服务提供者服务
         server.start();
     }
 }

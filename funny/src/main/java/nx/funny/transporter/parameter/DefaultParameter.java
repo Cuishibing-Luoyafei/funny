@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public class DefaultParameter implements Parameter {
 
-    private String type;
+    private String type;// 参数类型名称
     private Object value;
 
     public DefaultParameter() {

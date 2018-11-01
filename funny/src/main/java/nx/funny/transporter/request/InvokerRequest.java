@@ -13,7 +13,7 @@ public interface InvokerRequest extends Serializable {
     /**
      * 获取服务类型
      */
-    String getType();
+    String getName();
 
     /**
      * 获取服务实现类

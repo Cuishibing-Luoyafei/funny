@@ -29,12 +29,12 @@ public class DefaultMessageEncoderTest {
     @Test
     public void testInvokerRequestEncode() {
         DefaultInvokerRequest request = new DefaultInvokerRequest();
-        request.setType(this.getClass().getName());
+        request.setName(this.getClass().getName());
         request.setMethodName("toString");
         request.setParameters(Arrays.asList(new DefaultParameter(Integer.class.getName(), 12)));
         DefaultMessage message = requestEncoder.encode(request);
         System.out.println(message.getMessage());
-        Assert.assertEquals(message.getMessageType(), Message.STRING_MESSAGE);
+        Assert.assertEquals(message.getMessageType(), Message.JSON_MESSAGE);
     }
 
     @Test

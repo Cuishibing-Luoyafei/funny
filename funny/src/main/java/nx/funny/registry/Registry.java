@@ -16,9 +16,4 @@ public class Registry {
         server.start();
     }
 
-    public static void main(String[] args) {
-        ServiceRegistry serviceRegistry = new ServerServiceHeapRegistry();
-        init("localhost",9527,serviceRegistry);
-    }
-
 }

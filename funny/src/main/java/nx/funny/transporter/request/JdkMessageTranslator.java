@@ -26,6 +26,8 @@ public class JdkMessageTranslator<T> extends AbstractMessageTranslator<T> {
 
     @Override
     public T decode(DefaultMessage message) {
+        if (message.getMessageType() != Message.JDK_MESSAGE)
+            throw new RuntimeException("不支持的消息类型！");
         ByteArrayInputStream inputStream = new ByteArrayInputStream(message.getMessageBody());
         try {
             ObjectInputStream oi = new ObjectInputStream(inputStream);

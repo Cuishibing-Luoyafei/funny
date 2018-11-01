@@ -20,7 +20,7 @@ public class OioClientTest {
     @Test
     public void testSendRequest() throws IOException {
         DefaultInvokerRequest request = new DefaultInvokerRequest();
-        request.setType(String.class.getName());
+        request.setName(String.class.getName());
         request.setMethodName("toString");
         InvokerResponse response = client.sendRequest(request);
         System.out.println(response.toString());

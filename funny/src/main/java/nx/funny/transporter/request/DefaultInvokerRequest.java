@@ -12,7 +12,7 @@ import java.util.List;
 public class DefaultInvokerRequest implements InvokerRequest {
 
     @Getter
-    private String type;
+    private String name;
     @Getter
     @Setter
     private String typeName;
@@ -24,14 +24,14 @@ public class DefaultInvokerRequest implements InvokerRequest {
     private List<Parameter> parameters;
 
     /**
-     * 默认type和typeName相同
+     * 默认name和typeName相同
      */
-    public void setType(Class<?> clazz) {
-        setType(clazz.getName());
+    public void setName(Class<?> clazz) {
+        setName(clazz.getName());
     }
 
-    public void setType(String type) {
-        this.type = type;
-        this.typeName = type;
+    public void setName(String name) {
+        this.name = name;
+        this.typeName = name;
     }
 }

@@ -11,7 +11,7 @@ public abstract class AbstractMessageTranslator<T> implements MessageEncoder<T,D
     @Override
     public DefaultMessage encode(T request) {
         DefaultMessage resultMsg = new DefaultMessage();
-        resultMsg.setMessageType(Message.STRING_MESSAGE);
+        resultMsg.setMessageType(getMessageType());
         byte[] body = getRequestData(request);
         resultMsg.setMessageLength(body.length + 8);
         resultMsg.setMessageBody(body);
@@ -21,4 +21,5 @@ public abstract class AbstractMessageTranslator<T> implements MessageEncoder<T,D
     protected abstract int getMessageType();
 
     protected abstract byte[] getRequestData(T request);
+
 }

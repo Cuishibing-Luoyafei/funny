@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 public interface Message extends Serializable {
 
-    int STRING_MESSAGE = 0;//消息体是一个字符串
+    int JSON_MESSAGE = 0;//消息体是一个json字符串
     int JDK_MESSAGE = 1;
 
     /**

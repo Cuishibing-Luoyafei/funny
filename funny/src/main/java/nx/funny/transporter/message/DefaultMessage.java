@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 用字符串传递消息
+ * 默认消息实现类
  */
 @Getter
 @Setter
@@ -33,8 +33,6 @@ public class DefaultMessage implements Message {
      */
     public static DefaultMessage read(ByteBuf buffer) {
         int messageType = buffer.readInt();
-        if (messageType != Message.STRING_MESSAGE)
-            throw new RuntimeException("不支持的消息类型！");
         DefaultMessage message = new DefaultMessage();
         message.setMessageType(messageType);
         message.setMessageLength(buffer.readInt());

@@ -8,9 +8,10 @@ import nx.funny.transporter.message.Message;
 
 public class JsonMessageTranslator<T> extends AbstractMessageTranslator<T> {
     private Gson gson = GsonUtils.gsonInstance();
+
     @Override
     protected int getMessageType() {
-        return Message.STRING_MESSAGE;
+        return Message.JSON_MESSAGE;
     }
 
     @Override
@@ -20,7 +21,10 @@ public class JsonMessageTranslator<T> extends AbstractMessageTranslator<T> {
 
     @Override
     public T decode(DefaultMessage message) {
-        return gson.fromJson(message.getMessage(), new TypeToken<T>(){}.getType());
+        if (message.getMessageType() != Message.JSON_MESSAGE)
+            throw new RuntimeException("不支持的消息类型！");
+        return gson.fromJson(message.getMessage(), new TypeToken<T>() {
+        }.getType());
     }
 
 }

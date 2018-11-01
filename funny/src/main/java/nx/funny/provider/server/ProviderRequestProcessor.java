@@ -30,7 +30,7 @@ public class ProviderRequestProcessor implements InvokerRequestProcessor {
 
     @Override
     public InvokerResponse processRequest(InvokerRequest request) {
-        ServiceType type = new ServiceType(request.getType(), request.getTypeName());
+        ServiceType type = new ServiceType(request.getName(), request.getTypeName());
         ServiceTargetFactory targetFactory = register.getTargetFactory(type);
         Object serviceTarget = targetFactory.getServiceTarget(type);
         DefaultInvokerResponse response = new DefaultInvokerResponse();

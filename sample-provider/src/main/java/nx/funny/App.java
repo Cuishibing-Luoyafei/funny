@@ -5,6 +5,8 @@ import nx.funny.provider.server.ProviderServer;
 import nx.funny.sampleprovider.SampleProviderInterfaceImpl;
 import nx.funny.sampleprovider.SampleProviderInterfaceImpl2;
 
+import java.util.Arrays;
+
 
 /**
  * Hello world!
@@ -16,10 +18,14 @@ public class App {
                 "localhost",9528);
 
         // 注册实现1
-        register.register(SampleProviderInterfaceImpl.class);
+        // register.register(SampleProviderInterfaceImpl.class);
 
         // 注册实现2
-        register.register(SampleProviderInterfaceImpl2.class);
+        // register.register(SampleProviderInterfaceImpl2.class);
+
+        // 注册多个远程对象
+        register.register(Arrays.asList(SampleProviderInterfaceImpl.class,
+                SampleProviderInterfaceImpl2.class));
 
         ProviderServer server = new ProviderServer(register);
 

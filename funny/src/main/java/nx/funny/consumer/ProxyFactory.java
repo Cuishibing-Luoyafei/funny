@@ -1,5 +1,6 @@
 package nx.funny.consumer;
 
+import nx.funny.registry.ServiceInfo;
 import nx.funny.registry.ServiceRegistry;
 
 /**
@@ -7,6 +8,10 @@ import nx.funny.registry.ServiceRegistry;
  */
 public interface ProxyFactory {
     <T> T getProxy(Class<T> clazz);
+
+    <T> T getProxy(String name, Class<T> clazz);
+
+    <T> T getProxy(Class<T> clazz, ServiceInfo info);
 
     ServiceRegistry getServiceRegistry();
 }

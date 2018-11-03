@@ -1,6 +1,7 @@
 package nx.funny.registry;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -70,5 +71,12 @@ public class ServerServiceHeapRegistry implements ServiceRegistry {
         });
         logger.log(Level.INFO, "retrieve:" + name);
         return result;
+    }
+
+    @Override
+    public void register(List<ServiceInfo> services) {
+        if (services == null)
+            return;
+        services.forEach(this::register);
     }
 }

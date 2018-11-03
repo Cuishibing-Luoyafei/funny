@@ -11,6 +11,8 @@ import nx.funny.registry.ServicePosition;
 import nx.funny.registry.ServiceRegistry;
 import nx.funny.registry.ServiceType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,6 +51,12 @@ public class Register {
         ProxyFactory proxyFactory = new DefaultProxyFactory(registryIp, registryPort);
         serviceRegistry = proxyFactory.getServiceRegistry();
         positionProvider = () -> new ServicePosition(providerIp, providerPort);
+    }
+
+    public void register(List<Class<?>> types) {
+        if (types == null)
+            return;
+        types.forEach(this::register);
     }
 
     /**
@@ -119,8 +127,19 @@ public class Register {
         ServiceType type = new ServiceType(name, typeName);
         ServicePosition position = positionProvider.getServicePosition();
         ServiceInfo info = new ServiceInfo(type, position);
-        serviceRegistry.register(info);
+        // serviceRegistry.register(info);
+        waitRegisterInfos.add(info);
         typeTargetFactoryMap.put(type, targetFactory);
+    }
+
+    private List<ServiceInfo> waitRegisterInfos = new ArrayList<>();
+
+    /**
+     * 把缓存的服务信息注册到注册中心，这样可以避免频繁的网络通信
+     */
+    public void syncData() {
+        serviceRegistry.register(waitRegisterInfos);
+        waitRegisterInfos.clear();
     }
 
     /**

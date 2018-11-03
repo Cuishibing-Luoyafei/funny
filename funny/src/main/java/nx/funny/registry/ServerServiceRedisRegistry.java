@@ -121,6 +121,13 @@ public class ServerServiceRedisRegistry implements ServiceRegistry {
 	}
 
 	@Override
+	public void register(List<ServiceInfo> services) {
+		if (services == null)
+			return;
+		services.forEach(this::register);
+	}
+
+	@Override
 	public void remove(ServiceInfo info) {
 		ServicePosition position = info.getPosition();
 

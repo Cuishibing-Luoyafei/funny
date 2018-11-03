@@ -62,7 +62,8 @@ public class Register {
     /**
      * 注册一个服务提供者，如果类型上有ServiceProvider注解就用注解的信息，否则就用类型本身的
      * 默认使用FirstNewTargetFactory对象工厂
-     * @param type          要注册的类型
+     *
+     * @param type 要注册的类型
      */
     public void register(Class<?> type) {
         String[] names = resolveNames(type);
@@ -88,6 +89,17 @@ public class Register {
      */
     public void register(String name, Object service) {
         register(name, service.getClass().getName(), s -> service);
+    }
+
+    /**
+     * 根据指定的服务名称注册一个服务提供者
+     *
+     * @param name     服务名称
+     * @param typeName 类型名
+     * @param service  要注册的服务提供者对象
+     */
+    public void register(String name, String typeName, Object service) {
+        register(name, typeName, s -> service);
     }
 
     /**

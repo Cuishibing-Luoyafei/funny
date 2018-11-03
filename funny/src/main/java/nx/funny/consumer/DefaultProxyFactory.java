@@ -16,9 +16,8 @@ public class DefaultProxyFactory implements ProxyFactory {
     private ServiceChooser serviceChooser;
 
     public DefaultProxyFactory(String registryIp, int registryPort) {
-        String registryServiceName = ServiceRegistry.class.getName();
         serviceRegistry = getProxy(ServiceRegistry.class,
-                new ServiceInfo(registryServiceName, registryIp, registryPort));
+                new ServiceInfo(ServiceRegistry.SERVICE_REGISTRY_NAME, registryIp, registryPort));
         serviceChooser = new RandomServiceChooser();
     }
 

@@ -11,10 +11,10 @@ import nx.funny.transporter.parameter.Parameter;
 import nx.funny.transporter.request.DefaultInvokerRequest;
 import nx.funny.transporter.response.InvokerResponse;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 public class DefaultProxyFactory implements ProxyFactory {
@@ -36,7 +36,7 @@ public class DefaultProxyFactory implements ProxyFactory {
                     String name = clazz.getName();
                     Set<ServiceInfo> serviceInfos = serviceRegistry.retrieve(name);
                     ServiceInfo serviceInfo = serviceChooser.choose(serviceInfos);
-                    return invoke(name,serviceInfo.getType().getTypeName(), method.getName(), serviceInfo.getPosition(), args);
+                    return invoke(name, serviceInfo.getType().getTypeName(), method, serviceInfo.getPosition(), args);
                 });
         return (T) o;
     }
@@ -45,37 +45,39 @@ public class DefaultProxyFactory implements ProxyFactory {
         Object o = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                 new Class[]{clazz}, (target, method, args) -> {
                     Set<ServiceInfo> serviceInfos = serviceRegistry.retrieve(name);
-                    ServiceInfo serviceInfo = (ServiceInfo) serviceInfos.toArray()[new Random().nextInt(serviceInfos.size())];
-                    return invoke(name,serviceInfo.getType().getTypeName(), method.getName(), serviceInfo.getPosition(), args);
+                    ServiceInfo serviceInfo = serviceChooser.choose(serviceInfos);
+                    return invoke(name, serviceInfo.getType().getTypeName(), method, serviceInfo.getPosition(), args);
                 });
         return (T) o;
     }
 
     private <T> T getProxy(Class<T> clazz, ServicePosition position) {
         Object o = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                new Class[]{clazz}, (target, method, args) -> invoke(clazz.getName(),clazz.getName(), method.getName(), position, args));
+                new Class[]{clazz}, (target, method, args) -> invoke(clazz.getName(), clazz.getName(), method, position, args));
         return (T) o;
     }
 
-    private static Object invoke(String type, String typeName,String methodName, ServicePosition position, Object[] args) throws Exception {
+    private static Object invoke(String name, String typeName, Method method, ServicePosition position, Object[] args) throws Exception {
         try (OioClient client = new OioClient()) {
             client.connect(position.getIp(), position.getPort());
             DefaultInvokerRequest request = new DefaultInvokerRequest();
-            request.setName(type);
+            request.setName(name);
             request.setTypeName(typeName);
-            request.setMethodName(methodName);
-            request.setParameters(getParametersFromArgs(args));
+            request.setMethodName(method.getName());
+            request.setParameters(getParametersFromArgs(method, args));
             InvokerResponse response = client.sendRequest(request);
             return response.getResult().getValue();
         }
     }
 
-    private static List<Parameter> getParametersFromArgs(Object[] args) {
+    private static List<Parameter> getParametersFromArgs(Method method, Object[] args) {
         if (args == null || args.length == 0)
             return null;
         List<Parameter> parameters = new ArrayList<>(args.length);
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        int i = 0;
         for (Object o : args) {
-            parameters.add(new DefaultParameter(o.getClass(), o));
+            parameters.add(new DefaultParameter(parameterTypes[i++], o));
         }
         return parameters;
     }

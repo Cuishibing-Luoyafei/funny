@@ -3,6 +3,7 @@ package nx.funny.transporter;
 
 import nx.funny.transporter.exception.InvokeException;
 import nx.funny.transporter.message.DefaultMessage;
+import nx.funny.transporter.message.Message;
 import nx.funny.transporter.parameter.DefaultParameter;
 import nx.funny.transporter.request.DefaultInvokerRequest;
 import nx.funny.transporter.request.InvokerRequest;
@@ -42,7 +43,7 @@ public class DefaultMessageDecoderTest {
                 new DefaultParameter(DefaultMessage.class, msgParam),
                 new DefaultParameter(Boolean.class, true),
                 new DefaultParameter(Double.class, 123.456789)));
-        DefaultMessage message = requestTranslator.encode(request1);
+        Message message = requestTranslator.encode(request1);
 
         InvokerRequest request2 = requestTranslator.decode(message);
         System.out.println(request1.toString());
@@ -55,7 +56,7 @@ public class DefaultMessageDecoderTest {
         DefaultInvokerRequest request1 = new DefaultInvokerRequest();
         request1.setName(this.getClass());
         request1.setMethodName("toString");
-        DefaultMessage message = requestTranslator.encode(request1);
+        Message message = requestTranslator.encode(request1);
 
         InvokerRequest request2 = requestTranslator.decode(message);
         System.out.println(request1.toString());
@@ -68,7 +69,7 @@ public class DefaultMessageDecoderTest {
         DefaultInvokerResponse response1 = new DefaultInvokerResponse();
         response1.setResult(new DefaultParameter(Integer.class, 23));
         response1.setException(new InvokeException("asdf"));
-        DefaultMessage message = responseTranslator.encode(response1);
+        Message message = responseTranslator.encode(response1);
 
         InvokerResponse response2 = responseTranslator.decode(message);
 
@@ -82,7 +83,7 @@ public class DefaultMessageDecoderTest {
         DefaultInvokerResponse response1 = new DefaultInvokerResponse();
         response1.setResult(new DefaultParameter(Integer.class, 23));
 
-        DefaultMessage message = responseTranslator.encode(response1);
+        Message message = responseTranslator.encode(response1);
 
         InvokerResponse response2 = responseTranslator.decode(message);
 

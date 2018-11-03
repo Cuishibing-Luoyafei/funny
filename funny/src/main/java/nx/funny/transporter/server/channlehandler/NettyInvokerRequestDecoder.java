@@ -15,17 +15,17 @@ import java.util.List;
 @Setter
 @Getter
 public class NettyInvokerRequestDecoder extends ByteToMessageDecoder {
-    private MessageDecoder<DefaultMessage, InvokerRequest> messageDecoder;
+    private MessageDecoder<Message, InvokerRequest> messageDecoder;
 
     public NettyInvokerRequestDecoder() {
     }
 
-    public NettyInvokerRequestDecoder(MessageDecoder<DefaultMessage, InvokerRequest> messageDecoder) {
+    public NettyInvokerRequestDecoder(MessageDecoder<Message, InvokerRequest> messageDecoder) {
         this.messageDecoder = messageDecoder;
     }
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         // message类型和body长度
         if (in.readableBytes() >= 8) {
             // int messageType = in.getInt(0);

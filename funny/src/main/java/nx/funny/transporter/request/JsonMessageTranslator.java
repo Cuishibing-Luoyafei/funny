@@ -3,9 +3,11 @@ package nx.funny.transporter.request;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import nx.funny.transporter.common.GsonUtils;
-import nx.funny.transporter.message.DefaultMessage;
 import nx.funny.transporter.message.Message;
 
+import java.nio.charset.Charset;
+
+@Deprecated
 public class JsonMessageTranslator<T> extends AbstractMessageTranslator<T> {
     private Gson gson = GsonUtils.gsonInstance();
 
@@ -20,11 +22,15 @@ public class JsonMessageTranslator<T> extends AbstractMessageTranslator<T> {
     }
 
     @Override
-    public T decode(DefaultMessage message) {
+    public T decode(Message message) {
         if (message.getMessageType() != Message.JSON_MESSAGE)
             throw new RuntimeException("不支持的消息类型！");
-        return gson.fromJson(message.getMessage(), new TypeToken<T>() {
+        return gson.fromJson(getMessageContent(message), new TypeToken<T>() {
         }.getType());
+    }
+
+    private String getMessageContent(Message message) {
+        return new String(message.getMessageBody(), Charset.forName("UTF-8"));
     }
 
 }

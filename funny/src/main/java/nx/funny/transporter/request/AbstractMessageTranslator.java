@@ -5,11 +5,11 @@ import nx.funny.transporter.MessageEncoder;
 import nx.funny.transporter.message.DefaultMessage;
 import nx.funny.transporter.message.Message;
 
-public abstract class AbstractMessageTranslator<T> implements MessageEncoder<T,DefaultMessage>,
-        MessageDecoder<DefaultMessage,T> {
+public abstract class AbstractMessageTranslator<T> implements MessageEncoder<T, Message>,
+        MessageDecoder<Message, T> {
 
     @Override
-    public DefaultMessage encode(T request) {
+    public Message encode(T request) {
         DefaultMessage resultMsg = new DefaultMessage();
         resultMsg.setMessageType(getMessageType());
         byte[] body = getRequestData(request);

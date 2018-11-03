@@ -7,6 +7,7 @@ import lombok.Setter;
 import nx.funny.transporter.MessageDecoder;
 import nx.funny.transporter.MessageEncoder;
 import nx.funny.transporter.message.DefaultMessage;
+import nx.funny.transporter.message.Message;
 import nx.funny.transporter.request.InvokerRequest;
 import nx.funny.transporter.request.JdkMessageTranslator;
 import nx.funny.transporter.response.InvokerResponse;
@@ -20,11 +21,11 @@ import java.net.Socket;
 public class OioClient implements Client, Closeable {
     @Getter
     @Setter
-    private MessageEncoder<InvokerRequest, DefaultMessage> messageEncoder;
+    private MessageEncoder<InvokerRequest, Message> messageEncoder;
 
     @Getter
     @Setter
-    private MessageDecoder<DefaultMessage, InvokerResponse> messageDecoder;
+    private MessageDecoder<Message, InvokerResponse> messageDecoder;
 
     private Socket socket;
     private InputStream inputStream;
@@ -53,7 +54,7 @@ public class OioClient implements Client, Closeable {
         if (socket == null) {
             throw new IOException("没有连接到服务器！");
         }
-        DefaultMessage message = messageEncoder.encode(request);
+        Message message = messageEncoder.encode(request);
         message.write(buffer);
         buffer.getBytes(0, outputStream, buffer.readableBytes());
         buffer.clear();

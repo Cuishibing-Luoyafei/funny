@@ -2,7 +2,6 @@ package nx.funny.transporter;
 
 
 import nx.funny.transporter.exception.InvokeException;
-import nx.funny.transporter.message.DefaultMessage;
 import nx.funny.transporter.message.Message;
 import nx.funny.transporter.parameter.DefaultParameter;
 import nx.funny.transporter.request.DefaultInvokerRequest;
@@ -32,9 +31,9 @@ public class DefaultMessageEncoderTest {
         request.setName(this.getClass().getName());
         request.setMethodName("toString");
         request.setParameters(Arrays.asList(new DefaultParameter(Integer.class.getName(), 12)));
-        DefaultMessage message = requestEncoder.encode(request);
-        System.out.println(message.getMessage());
-        Assert.assertEquals(message.getMessageType(), Message.JSON_MESSAGE);
+        Message message = requestEncoder.encode(request);
+        System.out.println(message.toString());
+        Assert.assertEquals(message.getMessageType(), Message.JDK_MESSAGE);
     }
 
     @Test
@@ -42,7 +41,7 @@ public class DefaultMessageEncoderTest {
         DefaultInvokerResponse response = new DefaultInvokerResponse();
         response.setException(new InvokeException("aaa"));
         response.setResult(new DefaultParameter(Integer.class, 12));
-        DefaultMessage message = responseEncoder.encode(response);
-        System.out.println(message.getMessage());
+        Message message = responseEncoder.encode(response);
+        System.out.println(message.toString());
     }
 }

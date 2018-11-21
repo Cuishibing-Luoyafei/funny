@@ -45,10 +45,10 @@ public class Register {
         this.serviceRegistry = serviceRegistry;
     }
 
-    public Register(String registryIp, int registryPort,
+    public Register(String registryIp, int registryPort, Class<? extends ServiceRegistry> registryType,
                     String providerIp, int providerPort) {
         this();
-        ProxyFactory proxyFactory = new DefaultProxyFactory(registryIp, registryPort);
+        ProxyFactory proxyFactory = new DefaultProxyFactory(registryIp, registryPort, registryType);
         serviceRegistry = proxyFactory.getServiceRegistry();
         positionProvider = () -> new ServicePosition(providerIp, providerPort);
     }

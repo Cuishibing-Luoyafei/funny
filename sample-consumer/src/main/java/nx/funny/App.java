@@ -1,6 +1,7 @@
 package nx.funny;
 
 import nx.funny.consumer.DefaultProxyFactory;
+import nx.funny.registry.ServerServiceHeapRegistry;
 import nx.funny.registry.ServiceInfo;
 import nx.funny.registry.ServiceRegistry;
 import nx.funny.sampleprovider.SampleProviderInterface;
@@ -14,7 +15,7 @@ public class App {
     public static void main(String[] args) {
 
         // 根据注册中心地址生成代理工厂
-        DefaultProxyFactory proxyFactory = new DefaultProxyFactory("localhost", 9527);
+        DefaultProxyFactory proxyFactory = new DefaultProxyFactory("localhost", 9527, ServerServiceHeapRegistry.class);
 
         // 获取远程对象
         SampleProviderInterface service = proxyFactory.getProxy(SampleProviderInterface.class);

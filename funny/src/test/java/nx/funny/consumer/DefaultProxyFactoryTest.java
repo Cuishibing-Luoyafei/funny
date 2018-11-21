@@ -2,6 +2,7 @@ package nx.funny.consumer;
 
 import nx.funny.provider.register.Register;
 import nx.funny.provider.server.ProviderServer;
+import nx.funny.registry.ServerServiceHeapRegistry;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ public class DefaultProxyFactoryTest {
 
     @Before
     public void before() {
-        proxyFactory = new DefaultProxyFactory("localhost", 9527);
+        proxyFactory = new DefaultProxyFactory("localhost", 9527, ServerServiceHeapRegistry.class);
     }
 
     // 注册服务
@@ -19,7 +20,7 @@ public class DefaultProxyFactoryTest {
     public void testRegisterService() {
 
         // 构建ServiceProviderRegister对象
-        Register register = new Register("localhost",9527,
+        Register register = new Register("localhost", 9527, ServerServiceHeapRegistry.class,
                 "localhost",9528);
         register.register(RpcTestInterfaceImpl.class);
 

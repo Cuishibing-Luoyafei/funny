@@ -20,32 +20,29 @@ public class ServerServiceHeapRegistry implements ServiceRegistry {
     public ServerServiceHeapRegistry() {
     }
 
+    private Set<ServicePosition> getPositionContainer(ServiceType type) {
+        return serviceRegistry.computeIfAbsent(type, t -> {
+            return new HashSet<>();
+        });
+    }
+
     @Override
     public void register(ServiceInfo info) {
         ServiceType type = info.getType();
         ServicePosition position = info.getPosition();
-        synchronized (serviceRegistry) {
-            Set<ServicePosition> container = serviceRegistry.get(type);
-            if (container == null) {
-                container = new HashSet<>();
-                container.add(position);
-                serviceRegistry.put(type, container);
-                logger.log(Level.INFO, "register:" + info.toString());
-                return;
-            }
-        }
-        Set<ServicePosition> container = serviceRegistry.get(type);
+
+        Set<ServicePosition> container = getPositionContainer(type);
         synchronized (container) {
             container.add(position);
+            logger.log(Level.INFO, "register:" + info.toString());
         }
-        logger.log(Level.INFO, "register:" + info.toString());
     }
 
     @Override
     public void remove(ServiceInfo info) {
-        Set<ServicePosition> positions = serviceRegistry.get(info.getType());
-        synchronized (positions) {
-            positions.remove(info.getPosition());
+        Set<ServicePosition> container = getPositionContainer(info.getType());
+        synchronized (container) {
+            container.remove(info.getPosition());
         }
         logger.log(Level.INFO, "remove:" + info.toString());
     }

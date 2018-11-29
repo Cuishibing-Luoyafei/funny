@@ -22,5 +22,6 @@ public class RegisterTest {
     @Test
     public void testRegister(){
         register.register(this.getClass(), typeName -> this);
+
     }
 }

@@ -12,7 +12,7 @@ public class Registry {
                 serviceRegistry);
         // 注册自己
         //register.register(ServiceRegistry.SERVICE_REGISTRY_NAME, ServiceRegistry.SERVICE_REGISTRY_NAME, serviceRegistry);
-        register.register(ServiceRegistry.SERVICE_REGISTRY_NAME, serviceRegistry);
+        register.register(ServiceRegistry.class, serviceRegistry);
         ProviderServer server = new ProviderServer(register);
         server.start();
     }

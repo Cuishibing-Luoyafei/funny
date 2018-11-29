@@ -9,16 +9,10 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ServiceProvider {
-    String value();
-    /**
-     * 标明该服务提供者的名称
-     * 如果没有提供，那么默认为类的全限定名称
-     */
-    String name() default "";
 
     /**
-     * 标明服务提供者的实现类的名称
-     * 如果没有提供，那么默认为类的全限定名称
-     */
-    String typeName() default "";
+     * 标注服务提供者的接口,因为有可能一个类实现了多个接口需要明确指定一个.
+     * 如果没有指定则使用类实现的第一个接口
+     * */
+    Class<?> interFace() default ServiceProvider.class;
 }

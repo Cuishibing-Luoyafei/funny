@@ -4,6 +4,7 @@ import nx.funny.provider.register.FirstNewTargetFactory;
 import nx.funny.provider.register.Register;
 import nx.funny.provider.server.ProviderServer;
 import nx.funny.registry.ServerServiceHeapRegistry;
+import nx.funny.sampleprovider.SampleProviderInterface;
 import nx.funny.sampleprovider.SampleProviderInterfaceImpl;
 import nx.funny.sampleprovider.SampleProviderInterfaceImpl2;
 
@@ -17,20 +18,13 @@ public class App {
     public static void main(String[] args) {
         // 根据注册中心地址和自身服务地址生成注册者对象
         Register register = new Register("localhost", 9527, ServerServiceHeapRegistry.class,
-                "localhost",9528);
+                "localhost", 9528);
 
-        // 注册实现1
-        // register.register(SampleProviderInterfaceImpl.class);
-
-        // 注册实现2
-        // register.register(SampleProviderInterfaceImpl2.class);
-
-        // 注册多个远程对象
-        // register.register(Arrays.asList(SampleProviderInterfaceImpl.class,
-        //         SampleProviderInterfaceImpl2.class));
+        // 直接注册服务对象
+        register.register(SampleProviderInterface.class, new SampleProviderInterfaceImpl());
 
         // 使用包扫描的方式注册
-        register.scan(FirstNewTargetFactory.INSTANCE(),"nx.funny");
+        // register.scan(FirstNewTargetFactory.INSTANCE(),"nx.funny");
 
         ProviderServer server = new ProviderServer(register);
 

@@ -92,27 +92,30 @@ public class Register {
     }
 
     /**
-     * 注册一个服务提供者,service必须被@ServiceProvider标注
+     * 注册一个服务提供者
      *
-     * @param service 要注册的服务
-     * @param factory 服务工厂
+     * @param serviceType 服务实现类
+     * @param factory     服务提供者工厂
      */
-    public void register(Class<?> service, ServiceTargetFactory factory) {
-        if (service.getAnnotation(ServiceProvider.class) == null)
+    public void register(Class<?> serviceType, ServiceTargetFactory factory) {
+        if(serviceType.isInterface())
             return;
-        String[] names = resolveNames(service);
+        String[] names = resolveNames(serviceType);
         register(names[0], names[1], factory);
     }
 
     /**
-     * 根据指定的服务接口类型注册一个服务提供者
+     * 注册一个服务提供者
      *
-     * @param interFace 服务接口类型
-     * @param service   要注册的服务提供者对象
+     * @param serviceType 服务接口类型或实现类
+     * @param service     要注册的服务提供者对象
      */
-    public void register(Class<?> interFace, Object service) {
-        if (interFace.isInterface()) {
-            register(interFace.getName(), service.getClass().getName(), t -> service);
+    public void register(Class<?> serviceType, Object service) {
+        if (serviceType.isInterface()) {
+            register(serviceType.getName(), service.getClass().getName(), t -> service);
+        } else {
+            String[] names = resolveNames(serviceType);
+            register(names[0], names[1], t -> service);
         }
     }
 
@@ -127,7 +130,7 @@ public class Register {
         String name = serviceClazz.getInterfaces()[0].getName();
         String typeName = serviceClazz.getName();
         ServiceProvider serviceProvider = serviceClazz.getAnnotation(ServiceProvider.class);
-        if (!serviceProvider.interFace().equals(ServiceProvider.class)) {
+        if (serviceProvider != null && !serviceProvider.interFace().equals(ServiceProvider.class)) {
             name = serviceProvider.interFace().getName();
         }
         return new String[]{name, typeName};

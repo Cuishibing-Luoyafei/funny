@@ -37,10 +37,7 @@ public class ProviderRequestProcessor implements InvokerRequestProcessor {
         try {
             Method method = findMethod(serviceTarget, request);
             response.setResult(invokeMethod(method, serviceTarget, request));
-        } catch (NoSuchMethodException |
-                ClassNotFoundException |
-                IllegalAccessException |
-                InvocationTargetException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             response.setException(new InvokeException(e.getMessage()));
         }

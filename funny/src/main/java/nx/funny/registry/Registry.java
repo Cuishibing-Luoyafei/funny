@@ -11,7 +11,8 @@ public class Registry {
         Register register = new Register(positionProvider,
                 serviceRegistry);
         // 注册自己
-        register.register(ServiceRegistry.SERVICE_REGISTRY_NAME, ServiceRegistry.SERVICE_REGISTRY_NAME, serviceRegistry);
+        //register.register(ServiceRegistry.SERVICE_REGISTRY_NAME, ServiceRegistry.SERVICE_REGISTRY_NAME, serviceRegistry);
+        register.register(ServiceRegistry.SERVICE_REGISTRY_NAME, serviceRegistry);
         ProviderServer server = new ProviderServer(register);
         server.start();
     }

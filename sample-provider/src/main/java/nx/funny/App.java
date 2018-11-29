@@ -1,5 +1,6 @@
 package nx.funny;
 
+import nx.funny.provider.register.FirstNewTargetFactory;
 import nx.funny.provider.register.Register;
 import nx.funny.provider.server.ProviderServer;
 import nx.funny.registry.ServerServiceHeapRegistry;
@@ -25,8 +26,11 @@ public class App {
         // register.register(SampleProviderInterfaceImpl2.class);
 
         // 注册多个远程对象
-        register.register(Arrays.asList(SampleProviderInterfaceImpl.class,
-                SampleProviderInterfaceImpl2.class));
+        // register.register(Arrays.asList(SampleProviderInterfaceImpl.class,
+        //         SampleProviderInterfaceImpl2.class));
+
+        // 使用包扫描的方式注册
+        register.scan(FirstNewTargetFactory.INSTANCE(),"nx.funny");
 
         ProviderServer server = new ProviderServer(register);
 

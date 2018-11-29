@@ -2,7 +2,7 @@ package nx.funny.consumer;
 
 import nx.funny.provider.ServiceProvider;
 
-public @ServiceProvider("RpcTestInterface")
+public @ServiceProvider()
 class RpcTestInterfaceImpl implements RpcTestInterface{
     private static int instanceCounter = 0;
     private String name;

@@ -61,7 +61,7 @@ public class Register {
     }
 
     /**
-     * 扫描一个包下所有的服务类并注册
+     * 扫描一个包下所有的有ServiceProvider注解的服务类并注册
      *
      * @param basePackage  要扫描的包名
      * @param excludeClass 不要注册的类
@@ -72,7 +72,7 @@ public class Register {
         targetClassNames.forEach(name -> {
             try {
                 Class<?> serviceClass = Class.forName(name);
-                if (canRegisterService(serviceClass)) {
+                if (canRegisterService(serviceClass) && serviceClass.isAnnotationPresent(ServiceProvider.class)) {
                     targetClasses.add(serviceClass);
                 }
             } catch (ClassNotFoundException e) {
@@ -93,19 +93,32 @@ public class Register {
 
     /**
      * 注册一个服务提供者
+     * serviceType必须是服务的实现类，否则会忽略该服务的注册
+     * 如果服务没有实现接口则会忽略该服务的注册
      *
      * @param serviceType 服务实现类
      * @param factory     服务提供者工厂
      */
     public void register(Class<?> serviceType, ServiceTargetFactory factory) {
-        if(serviceType.isInterface())
+        if (!canRegisterService(serviceType))
             return;
         String[] names = resolveNames(serviceType);
         register(names[0], names[1], factory);
     }
 
     /**
+     * 注册一个服务
+     * 根据服务对象实现类解析服务名称
+     *
+     * @param service 要注册的服务
+     */
+    public void register(Object service) {
+        register(service.getClass(), service);
+    }
+
+    /**
      * 注册一个服务提供者
+     * 如果serviceType是接口，则服务名称是该接口的名称，否则根据服务对象实现类解析服务名称
      *
      * @param serviceType 服务接口类型或实现类
      * @param service     要注册的服务提供者对象
@@ -114,6 +127,8 @@ public class Register {
         if (serviceType.isInterface()) {
             register(serviceType.getName(), service.getClass().getName(), t -> service);
         } else {
+            if (!canRegisterService(serviceType))
+                return;
             String[] names = resolveNames(serviceType);
             register(names[0], names[1], t -> service);
         }
@@ -121,8 +136,7 @@ public class Register {
 
     private boolean canRegisterService(Class<?> service) {
         return !service.isInterface() &&
-                service.getInterfaces().length > 0 &&
-                service.isAnnotationPresent(ServiceProvider.class);
+                service.getInterfaces().length > 0;
     }
 
     private String[] resolveNames(Class<?> serviceClazz) {

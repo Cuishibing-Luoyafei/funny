@@ -21,7 +21,7 @@ public class App {
                 "localhost", 9528);
 
         // 直接注册服务对象
-        register.register(SampleProviderInterface.class, new SampleProviderInterfaceImpl());
+        register.register(new SampleProviderInterfaceImpl());
 
         // 使用包扫描的方式注册
         // register.scan(FirstNewTargetFactory.INSTANCE(),"nx.funny");

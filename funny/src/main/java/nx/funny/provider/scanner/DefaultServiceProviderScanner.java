@@ -48,6 +48,6 @@ public class DefaultServiceProviderScanner implements ServiceProviderScanner {
     }
 
     private String getClassNameOfFilePath(String path) {
-        return path.substring(path.indexOf("classes") + 8, path.length() - 6).replace('/', '.');
+        return path.substring(path.indexOf("classes") + 8, path.length() - 6).replace(File.separatorChar, '.');
     }
 }

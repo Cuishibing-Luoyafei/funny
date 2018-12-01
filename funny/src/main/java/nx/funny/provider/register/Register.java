@@ -98,7 +98,7 @@ public class Register {
      * @param factory     服务提供者工厂
      */
     public void register(Class<?> serviceType, ServiceTargetFactory factory) {
-        if(serviceType.isInterface())
+        if (serviceType.isInterface())
             return;
         String[] names = resolveNames(serviceType);
         register(names[0], names[1], factory);
@@ -150,7 +150,8 @@ public class Register {
      * 把缓存的服务信息注册到注册中心，这样可以避免频繁的网络通信
      */
     public void syncData() {
-        serviceRegistry.register(waitRegisterInfos);
+        if (serviceRegistry != null)
+            serviceRegistry.register(waitRegisterInfos);
         waitRegisterInfos.clear();
     }
 

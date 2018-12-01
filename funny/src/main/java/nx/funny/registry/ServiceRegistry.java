@@ -5,8 +5,6 @@ import java.util.Set;
 
 public interface ServiceRegistry {
 
-    String SERVICE_REGISTRY_NAME = ServiceRegistry.class.getName();
-
     void register(ServiceInfo info);
 
     void register(List<ServiceInfo> services);

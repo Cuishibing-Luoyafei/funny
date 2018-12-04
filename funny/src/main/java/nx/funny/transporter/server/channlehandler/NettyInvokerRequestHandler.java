@@ -2,11 +2,15 @@ package nx.funny.transporter.server.channlehandler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import lombok.Getter;
 import lombok.Setter;
 import nx.funny.transporter.request.InvokerRequest;
 import nx.funny.transporter.response.InvokerResponse;
 import nx.funny.transporter.server.InvokerRequestProcessor;
+
+import java.util.concurrent.Callable;
 
 @Getter
 @Setter
@@ -22,8 +26,14 @@ public class NettyInvokerRequestHandler extends SimpleChannelInboundHandler<Invo
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, InvokerRequest request) throws Exception {
-        InvokerResponse invokerResponse = requestProcessor.processRequest(request);
-        ctx.pipeline().writeAndFlush(invokerResponse);
+        Future<InvokerResponse> future = ctx.executor()
+                .submit(() -> requestProcessor.processRequest(request));
+        future.addListener(f -> {
+            if (f.isSuccess()) {
+                ctx.pipeline().writeAndFlush(f.get());
+            }
+            // 失败情况,忽略
+        });
     }
 
     @Override

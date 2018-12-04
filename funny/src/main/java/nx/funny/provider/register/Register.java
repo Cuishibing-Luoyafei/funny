@@ -164,7 +164,8 @@ public class Register {
      * 把缓存的服务信息注册到注册中心，这样可以避免频繁的网络通信
      */
     public void syncData() {
-        serviceRegistry.register(waitRegisterInfos);
+        if (serviceRegistry != null)
+            serviceRegistry.register(waitRegisterInfos);
         waitRegisterInfos.clear();
     }
 

@@ -1,7 +1,7 @@
 package nx.funny.transporter.request;
 
-import nx.funny.transporter.MessageDecoder;
-import nx.funny.transporter.MessageEncoder;
+import nx.funny.transporter.message.MessageDecoder;
+import nx.funny.transporter.message.MessageEncoder;
 import nx.funny.transporter.message.DefaultMessage;
 import nx.funny.transporter.message.Message;
 

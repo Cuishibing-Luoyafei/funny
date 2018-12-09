@@ -1,5 +1,7 @@
 package nx.funny.provider.scanner;
 
+import nx.funny.provider.ServiceProvider;
+
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -27,8 +29,14 @@ public class DefaultServiceProviderScanner implements ServiceProviderScanner {
         List<String> result = new ArrayList<>();
         Set<String> excludeSet = new HashSet<>(Arrays.asList(exclude));
         classNames.forEach(s -> {
-            if (!excludeSet.contains(s))
-                result.add(s);
+            try {
+                Class<?> c = Class.forName(s);
+                if (!excludeSet.contains(s) && !c.isInterface() && c.isAnnotationPresent(ServiceProvider.class))
+                    result.add(s);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         });
         return result;
     }

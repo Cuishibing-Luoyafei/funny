@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.Getter;
 import lombok.Setter;
-import nx.funny.transporter.MessageDecoder;
+import nx.funny.transporter.message.MessageDecoder;
 import nx.funny.transporter.message.DefaultMessage;
 import nx.funny.transporter.message.Message;
 import nx.funny.transporter.request.InvokerRequest;

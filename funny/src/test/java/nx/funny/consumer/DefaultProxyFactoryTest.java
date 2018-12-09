@@ -22,7 +22,7 @@ public class DefaultProxyFactoryTest {
 
         // 构建ServiceProviderRegister对象
         Register register = new Register("localhost", 9527, ServerServiceHeapRegistry.class,
-                "localhost",9528);
+                "localhost", 9528, false);
         register.register(RpcTestInterfaceImpl.class, FirstNewTargetFactory.INSTANCE());
 
         //register.register("RemoteObject",new RpcTestInterfaceImpl("instance 2"));

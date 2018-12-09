@@ -16,7 +16,7 @@ public class RegisterTest {
     public void before(){
         ServicePositionProvider positionProvider = () -> new ServicePosition("localhost",9528);
         ServiceRegistry serviceRegistry = new DefaultProxyFactory("localhost", 9527, ServerServiceHeapRegistry.class).getServiceRegistry();
-        register = new Register(positionProvider,serviceRegistry);
+        register = new Register(positionProvider, serviceRegistry, false);
     }
 
     @Test

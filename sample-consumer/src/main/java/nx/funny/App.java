@@ -27,8 +27,6 @@ public class App {
         ServiceRegistry serviceRegistry = proxyFactory.getProxy(ServiceRegistry.class);
         // 查看SampleProviderInterface在注册中心的注册情况
         Set<ServiceInfo> infoSet = serviceRegistry.retrieve(SampleProviderInterface.class.getName());
-        infoSet.forEach(info->{
-            System.out.println(info.getType().getTypeName());
-        });
+        infoSet.forEach(info -> System.out.println(info.getType().getTypeName()));
     }
 }

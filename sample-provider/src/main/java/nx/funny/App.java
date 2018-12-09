@@ -1,14 +1,9 @@
 package nx.funny;
 
-import nx.funny.provider.register.FirstNewTargetFactory;
 import nx.funny.provider.register.Register;
 import nx.funny.provider.server.ProviderServer;
 import nx.funny.registry.ServerServiceHeapRegistry;
-import nx.funny.sampleprovider.SampleProviderInterface;
 import nx.funny.sampleprovider.SampleProviderInterfaceImpl;
-import nx.funny.sampleprovider.SampleProviderInterfaceImpl2;
-
-import java.util.Arrays;
 
 
 /**
@@ -18,7 +13,7 @@ public class App {
     public static void main(String[] args) {
         // 根据注册中心地址和自身服务地址生成注册者对象
         Register register = new Register("localhost", 9527, ServerServiceHeapRegistry.class,
-                "localhost", 9528);
+                "localhost", 9528, false);
 
         // 直接注册服务对象
         register.register(new SampleProviderInterfaceImpl());

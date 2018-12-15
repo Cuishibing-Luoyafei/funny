@@ -31,6 +31,16 @@ public class ServiceInfo implements Serializable {
                 new ServicePosition(ip, port));
     }
 
+    public ServiceInfo type(ServiceType type) {
+        this.type = type;
+        return this;
+    }
+
+    public ServiceInfo position(ServicePosition position) {
+        this.position = position;
+        return this;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(type, position);

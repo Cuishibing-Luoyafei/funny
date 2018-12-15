@@ -27,6 +27,16 @@ public class ServiceType implements Serializable {
         this.typeName = typeName;
     }
 
+    public ServiceType name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public ServiceType typeName(String typeName) {
+        this.typeName = typeName;
+        return this;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(name, typeName);

@@ -1,5 +1,8 @@
 package nx.funny.registry;
 
+import nx.funny.transporter.message.HeartBeatRequest;
+import nx.funny.transporter.message.HeartBeatResponse;
+
 import java.util.List;
 import java.util.Set;
 
@@ -14,5 +17,7 @@ public interface ServiceRegistry {
     void removeAll(ServiceType type);
 
     Set<ServiceInfo> retrieve(String name);
+
+    HeartBeatResponse receiveHeartbeat(Set<HeartBeatRequest> services);
 
 }

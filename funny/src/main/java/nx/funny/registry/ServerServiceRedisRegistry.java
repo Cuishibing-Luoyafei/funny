@@ -2,6 +2,8 @@ package nx.funny.registry;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import nx.funny.transporter.message.HeartBeatRequest;
+import nx.funny.transporter.message.HeartBeatResponse;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
@@ -171,6 +173,13 @@ public class ServerServiceRedisRegistry implements ServiceRegistry {
 		}
 		logger.log(Level.INFO, "retrieve:" + name);
 		return result;
+	}
+
+	@Override
+	public HeartBeatResponse receiveHeartbeat(Set<HeartBeatRequest> services) {
+		// TODO: 2018/12/10 待实现redis方式的接收心跳
+		System.out.println(String.format("receiveHeartbeat: %s", services));
+		return null;
 	}
 
 	public String getName() {

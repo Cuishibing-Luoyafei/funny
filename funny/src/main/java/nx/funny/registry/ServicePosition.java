@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.xml.ws.Service;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -21,6 +22,16 @@ public class ServicePosition implements Serializable {
     public ServicePosition(String ip, int port) {
         this.ip = ip;
         this.port = port;
+    }
+
+    public ServicePosition ip(String ip) {
+        this.ip = ip;
+        return this;
+    }
+
+    public ServicePosition port(int port) {
+        this.port = port;
+        return this;
     }
 
     @Override

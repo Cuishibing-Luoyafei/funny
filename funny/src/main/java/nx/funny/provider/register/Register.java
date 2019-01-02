@@ -2,6 +2,7 @@ package nx.funny.provider.register;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 import nx.funny.consumer.DefaultProxyFactory;
 import nx.funny.consumer.ProxyFactory;
 import nx.funny.provider.ServicePositionProvider;
@@ -12,12 +13,15 @@ import nx.funny.registry.ServiceInfo;
 import nx.funny.registry.ServicePosition;
 import nx.funny.registry.ServiceRegistry;
 import nx.funny.registry.ServiceType;
+import nx.funny.transporter.common.HeartBeatRequestCodeType;
+import nx.funny.transporter.exception.HeartbeatException;
+import nx.funny.transporter.message.HeartBeatRequest;
+import nx.funny.transporter.message.HeartBeatResponse;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * 解析服务提供者的信息，并注册信息到注册中心
@@ -26,6 +30,8 @@ import java.util.logging.Logger;
  * 该类应该为单例模式
  */
 public class Register {
+
+    private Logger logger = Logger.getLogger(getClass().getName());
 
     @Getter
     @Setter
@@ -40,21 +46,24 @@ public class Register {
     @Setter
     private ServiceProviderScanner scanner;
 
-    public Register() {
-        typeTargetFactoryMap = new ConcurrentHashMap<>();
-        scanner = new DefaultServiceProviderScanner();
+    private boolean isRegistry;
+
+    public Register(boolean isRegistry) {
+        this.typeTargetFactoryMap = new ConcurrentHashMap<>();
+        this.scanner = new DefaultServiceProviderScanner();
+        this.isRegistry = isRegistry;
     }
 
     public Register(ServicePositionProvider positionProvider,
-                    ServiceRegistry serviceRegistry) {
-        this();
+                    ServiceRegistry serviceRegistry, boolean isRegistry) {
+        this(isRegistry);
         this.positionProvider = positionProvider;
         this.serviceRegistry = serviceRegistry;
     }
 
     public Register(String registryIp, int registryPort, Class<? extends ServiceRegistry> registryType,
-                    String providerIp, int providerPort) {
-        this();
+                    String providerIp, int providerPort, boolean isRegistry) {
+        this(isRegistry);
         ProxyFactory proxyFactory = new DefaultProxyFactory(registryIp, registryPort, registryType);
         serviceRegistry = proxyFactory.getServiceRegistry();
         positionProvider = () -> new ServicePosition(providerIp, providerPort);
@@ -164,9 +173,55 @@ public class Register {
      * 把缓存的服务信息注册到注册中心，这样可以避免频繁的网络通信
      */
     public void syncData() {
-        if (serviceRegistry != null)
-            serviceRegistry.register(waitRegisterInfos);
+        if (serviceRegistry != null) serviceRegistry.register(waitRegisterInfos);
+        if (!isRegistry) heartbeat();
         waitRegisterInfos.clear();
+    }
+
+    volatile boolean HEARTBEAT = true;
+
+    public void offline(ServiceInfo serviceInfo) {
+        HEARTBEAT = false;
+        positionProvider.getServicePosition();
+        Set<HeartBeatRequest> heartBeatRequestSet = new HashSet<>(1);
+        heartBeatRequestSet.add(HeartBeatRequest.of().code(HeartBeatRequestCodeType.HeartBeatRequestCodeTypeValue.FIN.value).serviceInfo(serviceInfo));
+        HeartBeatResponse heartBeatResponse = serviceRegistry.receiveHeartbeat(heartBeatRequestSet);
+        logger.info(String.format("offline response:%s", heartBeatResponse));
+    }
+
+    private void heartbeat() {
+        final Set<HeartBeatRequest> heartBeatRequestSet = this.waitRegisterInfos.stream().map(info ->
+                HeartBeatRequest.of()
+                        .code(HeartBeatRequestCodeType.HeartBeatRequestCodeTypeValue.NORMAL.value)
+                        .currentTime((int) System.currentTimeMillis() / 1000)
+                        .sendInterval(HeartBeatRequest.HREATBEAT_INTERVAL)
+                        .serviceInfo(info))
+                .collect(Collectors.toSet());
+
+        new Thread(() -> {
+            Integer retryTime = HeartBeatRequest.FAILURE_RETRY_TIME;
+            while (HEARTBEAT) {
+                try {
+                    final HeartBeatResponse response = serviceRegistry.receiveHeartbeat(heartBeatRequestSet);
+                    logger.info(String.format("registry response: %s", response));
+                    retryTime = HeartBeatRequest.FAILURE_RETRY_TIME;
+                    Thread.sleep(HeartBeatRequest.HREATBEAT_INTERVAL);
+                } catch (Exception e) {
+                    try {
+                        if (retryTime <= 0) {
+                            logger.warning(String.format("registry response err, retry failure! event: %s", e));
+                            throw new HeartbeatException("registry response err, retry failure!", e);
+                        } else {
+                            logger.warning(String.format("registry response err, retrying! event: %s", e));
+                        }
+                        Thread.sleep(HeartBeatRequest.FAILURE_RETRY_INTERVAL);
+                        retryTime--;
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     /**

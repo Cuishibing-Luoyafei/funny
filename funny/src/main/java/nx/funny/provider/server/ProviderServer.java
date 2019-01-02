@@ -14,7 +14,7 @@ public class ProviderServer extends NioServer {
         this.register = register;
     }
 
-    public void start(){
+    public void start() {
         register.syncData();
         setRequestProcessor(requestProcessor);
         start(register.getPositionProvider().getServicePosition().getPort());

@@ -20,12 +20,15 @@ import nx.funny.transporter.message.HeartBeatResponse;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.print.attribute.HashAttributeSet;
+
 /**
- * 解析服务提供者的信息，并注册信息到注册中心
- * 如果要注册的类有ServiceProvider注解，则优先使用注解的信息
+ * 解析服务提供者的信息，并注册信息到注册中心 如果要注册的类有ServiceProvider注解，则优先使用注解的信息
  * <p>
  * 该类应该为单例模式
  */
@@ -54,15 +57,14 @@ public class Register {
         this.isRegistry = isRegistry;
     }
 
-    public Register(ServicePositionProvider positionProvider,
-                    ServiceRegistry serviceRegistry, boolean isRegistry) {
+    public Register(ServicePositionProvider positionProvider, ServiceRegistry serviceRegistry, boolean isRegistry) {
         this(isRegistry);
         this.positionProvider = positionProvider;
         this.serviceRegistry = serviceRegistry;
     }
 
     public Register(String registryIp, int registryPort, Class<? extends ServiceRegistry> registryType,
-                    String providerIp, int providerPort, boolean isRegistry) {
+            String providerIp, int providerPort, boolean isRegistry) {
         this(isRegistry);
         ProxyFactory proxyFactory = new DefaultProxyFactory(registryIp, registryPort, registryType);
         serviceRegistry = proxyFactory.getServiceRegistry();
@@ -101,9 +103,7 @@ public class Register {
     }
 
     /**
-     * 注册一个服务提供者
-     * serviceType必须是服务的实现类，否则会忽略该服务的注册
-     * 如果服务没有实现接口则会忽略该服务的注册
+     * 注册一个服务提供者 serviceType必须是服务的实现类，否则会忽略该服务的注册 如果服务没有实现接口则会忽略该服务的注册
      *
      * @param serviceType 服务实现类
      * @param factory     服务提供者工厂
@@ -116,8 +116,7 @@ public class Register {
     }
 
     /**
-     * 注册一个服务
-     * 根据服务对象实现类解析服务名称
+     * 注册一个服务 根据服务对象实现类解析服务名称
      *
      * @param service 要注册的服务
      */
@@ -126,8 +125,7 @@ public class Register {
     }
 
     /**
-     * 注册一个服务提供者
-     * 如果serviceType是接口，则服务名称是该接口的名称，否则根据服务对象实现类解析服务名称
+     * 注册一个服务提供者 如果serviceType是接口，则服务名称是该接口的名称，否则根据服务对象实现类解析服务名称
      *
      * @param serviceType 服务接口类型或实现类
      * @param service     要注册的服务提供者对象
@@ -144,8 +142,7 @@ public class Register {
     }
 
     private boolean canRegisterService(Class<?> service) {
-        return !service.isInterface() &&
-                service.getInterfaces().length > 0;
+        return !service.isInterface() && service.getInterfaces().length > 0;
     }
 
     private String[] resolveNames(Class<?> serviceClazz) {
@@ -156,7 +153,7 @@ public class Register {
         if (serviceProvider != null && !serviceProvider.interFace().equals(ServiceProvider.class)) {
             name = serviceProvider.interFace().getName();
         }
-        return new String[]{name, typeName};
+        return new String[] { name, typeName };
     }
 
     private void register(String name, String typeName, ServiceTargetFactory targetFactory) {
@@ -172,56 +169,69 @@ public class Register {
     /**
      * 把缓存的服务信息注册到注册中心，这样可以避免频繁的网络通信
      */
-    public void syncData() {
-        if (serviceRegistry != null) serviceRegistry.register(waitRegisterInfos);
-        if (!isRegistry) heartbeat();
+    public synchronized void syncData() {
+        if (serviceRegistry != null)
+            serviceRegistry.register(waitRegisterInfos);
+        if (!isRegistry)
+            heartbeat(waitRegisterInfos);
         waitRegisterInfos.clear();
     }
 
     volatile boolean HEARTBEAT = true;
+    volatile boolean RUNNING = false;
+
+    private ExecutorService heartBeatExecutorService = Executors.newFixedThreadPool(1);
+
+    // Treat the map as a set
+    private Map<HeartBeatRequest, Object> allBeatRequests = new ConcurrentHashMap<>();
+    private final Object EMPTY_OBJECT = new Object();
+
+    private void heartbeat(List<ServiceInfo> needHeartBeatInfos) {
+        needHeartBeatInfos.stream()
+                .map(info -> HeartBeatRequest.of()
+                        .code(HeartBeatRequestCodeType.HeartBeatRequestCodeTypeValue.NORMAL.value)
+                        .currentTime((int) System.currentTimeMillis() / 1000)
+                        .sendInterval(HeartBeatRequest.HREATBEAT_INTERVAL).serviceInfo(info))
+                .collect(Collectors.toSet()).stream().map(request -> {
+                    return allBeatRequests.put(request, EMPTY_OBJECT);
+                });
+        if (!RUNNING) {
+            RUNNING = true;
+            heartBeatExecutorService.submit(() -> {
+                Integer retryTime = HeartBeatRequest.FAILURE_RETRY_TIME;
+                while (HEARTBEAT && !Thread.interrupted()) {
+                    try {
+                        final HeartBeatResponse response = serviceRegistry.receiveHeartbeat(allBeatRequests.keySet());
+                        logger.info(String.format("registry response: %s", response));
+                        retryTime = HeartBeatRequest.FAILURE_RETRY_TIME;
+                        Thread.sleep(HeartBeatRequest.HREATBEAT_INTERVAL);
+                    } catch (Exception e) {
+                        try {
+                            if (retryTime <= 0) {
+                                logger.warning(String.format("registry response err, retry failure! event: %s", e));
+                                throw new HeartbeatException("registry response err, retry failure!", e);
+                            } else {
+                                logger.warning(String.format("registry response err, retrying! event: %s", e));
+                            }
+                            Thread.sleep(HeartBeatRequest.FAILURE_RETRY_INTERVAL);
+                            retryTime--;
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            });
+        }
+    }
 
     public void offline(ServiceInfo serviceInfo) {
         HEARTBEAT = false;
         positionProvider.getServicePosition();
         Set<HeartBeatRequest> heartBeatRequestSet = new HashSet<>(1);
-        heartBeatRequestSet.add(HeartBeatRequest.of().code(HeartBeatRequestCodeType.HeartBeatRequestCodeTypeValue.FIN.value).serviceInfo(serviceInfo));
+        heartBeatRequestSet.add(HeartBeatRequest.of()
+                .code(HeartBeatRequestCodeType.HeartBeatRequestCodeTypeValue.FIN.value).serviceInfo(serviceInfo));
         HeartBeatResponse heartBeatResponse = serviceRegistry.receiveHeartbeat(heartBeatRequestSet);
         logger.info(String.format("offline response:%s", heartBeatResponse));
-    }
-
-    private void heartbeat() {
-        final Set<HeartBeatRequest> heartBeatRequestSet = this.waitRegisterInfos.stream().map(info ->
-                HeartBeatRequest.of()
-                        .code(HeartBeatRequestCodeType.HeartBeatRequestCodeTypeValue.NORMAL.value)
-                        .currentTime((int) System.currentTimeMillis() / 1000)
-                        .sendInterval(HeartBeatRequest.HREATBEAT_INTERVAL)
-                        .serviceInfo(info))
-                .collect(Collectors.toSet());
-
-        new Thread(() -> {
-            Integer retryTime = HeartBeatRequest.FAILURE_RETRY_TIME;
-            while (HEARTBEAT) {
-                try {
-                    final HeartBeatResponse response = serviceRegistry.receiveHeartbeat(heartBeatRequestSet);
-                    logger.info(String.format("registry response: %s", response));
-                    retryTime = HeartBeatRequest.FAILURE_RETRY_TIME;
-                    Thread.sleep(HeartBeatRequest.HREATBEAT_INTERVAL);
-                } catch (Exception e) {
-                    try {
-                        if (retryTime <= 0) {
-                            logger.warning(String.format("registry response err, retry failure! event: %s", e));
-                            throw new HeartbeatException("registry response err, retry failure!", e);
-                        } else {
-                            logger.warning(String.format("registry response err, retrying! event: %s", e));
-                        }
-                        Thread.sleep(HeartBeatRequest.FAILURE_RETRY_INTERVAL);
-                        retryTime--;
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            }
-        }).start();
     }
 
     /**

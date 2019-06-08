@@ -11,6 +11,7 @@ import nx.funny.transporter.request.InvokerRequest;
 import nx.funny.transporter.response.DefaultInvokerResponse;
 import nx.funny.transporter.response.InvokerResponse;
 import nx.funny.transporter.server.InvokerRequestProcessor;
+import nx.funny.utils.MethodUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,11 +19,7 @@ import java.util.List;
 
 public class ProviderRequestProcessor implements InvokerRequestProcessor {
 
-    @Setter
     private ServiceRegister serviceRegister;
-
-    public ProviderRequestProcessor() {
-    }
 
     public ProviderRequestProcessor(ServiceRegister serviceRegister) {
         this.serviceRegister = serviceRegister;
@@ -30,12 +27,12 @@ public class ProviderRequestProcessor implements InvokerRequestProcessor {
 
     @Override
     public InvokerResponse processRequest(InvokerRequest request) {
-        ServiceType type = new ServiceType(request.getName(), request.getTypeName());
+        ServiceType type = ServiceType.valueOf(request.getName(), request.getTypeName());
         ServiceTargetFactory targetFactory = serviceRegister.getTargetFactory(type);
         Object serviceTarget = targetFactory.getServiceTarget(type);
         DefaultInvokerResponse response = new DefaultInvokerResponse();
         try {
-            Method method = findMethod(serviceTarget, request);
+            Method method = MethodUtils.findMethod(serviceTarget.getClass(), request.getMethodName(), request.getParameters());
             response.setResult(invokeMethod(method, serviceTarget, request));
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,18 +59,4 @@ public class ProviderRequestProcessor implements InvokerRequestProcessor {
         return new DefaultParameter(invokeResult.getClass(), invokeResult);
     }
 
-    private Method findMethod(Object target, InvokerRequest request) throws NoSuchMethodException,
-            ClassNotFoundException {
-        String methodName = request.getMethodName();
-        List<Parameter> parameters = request.getParameters();
-        if (parameters == null) {// 没有参数
-            return target.getClass().getMethod(methodName);
-        }
-        Class<?>[] parameterClasses = new Class<?>[parameters.size()];
-        int i = 0;
-        for (Parameter parameter : parameters) {
-            parameterClasses[i++] = Class.forName(parameter.getType());
-        }
-        return target.getClass().getMethod(methodName, parameterClasses);
-    }
 }

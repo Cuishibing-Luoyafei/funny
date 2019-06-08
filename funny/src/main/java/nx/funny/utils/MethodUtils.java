@@ -69,9 +69,35 @@ public class MethodUtils {
                 if (hashCode() != other.hashCode()) {
                     return false;
                 }
-                return Objects.equals(target, other.target) &&
-                        Objects.equals(methodName, other.methodName) &&
-                        Objects.equals(parameters, other.parameters);
+                boolean result = false;
+
+                result = Objects.equals(target, other.target);
+                if (!result) {
+                    return false;
+                }
+
+                result = Objects.equals(methodName, other.methodName);
+                if (!result) {
+                    return false;
+                }
+                List<Parameter> otherParameters = other.parameters;
+                if (parameters == null && otherParameters == null) {
+                    return true;
+                }
+                if (parameters == null || otherParameters == null) {
+                    return false;
+                }
+                if (parameters.size() != otherParameters.size()) {
+                    return false;
+                }
+                int size = parameters.size();
+                for (int i = 0; i < size; ++i) {
+                    result = Objects.equals(parameters.get(i).getType(), otherParameters.get(i).getType());
+                    if (!result) {
+                        return false;
+                    }
+                }
+                return true;
             }
             return false;
         }

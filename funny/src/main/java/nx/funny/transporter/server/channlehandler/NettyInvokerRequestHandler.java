@@ -3,14 +3,11 @@ package nx.funny.transporter.server.channlehandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 import lombok.Getter;
 import lombok.Setter;
 import nx.funny.transporter.request.InvokerRequest;
 import nx.funny.transporter.response.InvokerResponse;
 import nx.funny.transporter.server.InvokerRequestProcessor;
-
-import java.util.concurrent.Callable;
 
 @Getter
 @Setter

@@ -13,6 +13,8 @@ import lombok.ToString;
 @ToString
 public class DefaultMessage implements Message {
 
+    private static final long serialVersionUID = 1L;
+    
     private int messageType;
     private int messageLength;
     private byte[] messageBody;

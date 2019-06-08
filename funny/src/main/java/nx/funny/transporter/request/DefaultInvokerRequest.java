@@ -11,6 +11,8 @@ import java.util.List;
 @ToString
 public class DefaultInvokerRequest implements InvokerRequest {
 
+    private static final long serialVersionUID = 140427183200373439L;
+    
     @Getter
     private String name;
     @Getter

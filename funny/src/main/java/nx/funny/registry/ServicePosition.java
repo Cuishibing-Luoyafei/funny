@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.xml.ws.Service;
 import java.io.Serializable;
 import java.util.Objects;
 

@@ -2,7 +2,6 @@ package nx.funny.provider.register;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.val;
 import nx.funny.consumer.DefaultProxyFactory;
 import nx.funny.consumer.ProxyFactory;
 import nx.funny.provider.ServicePositionProvider;
@@ -25,14 +24,12 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.print.attribute.HashAttributeSet;
-
 /**
  * 解析服务提供者的信息，并注册信息到注册中心 如果要注册的类有ServiceProvider注解，则优先使用注解的信息
  * <p>
  * 该类应该为单例模式
  */
-public class Register {
+public class ServiceRegister {
 
     private Logger logger = Logger.getLogger(getClass().getName());
 
@@ -51,20 +48,20 @@ public class Register {
 
     private boolean isRegistry;
 
-    public Register(boolean isRegistry) {
+    public ServiceRegister(boolean isRegistry) {
         this.typeTargetFactoryMap = new ConcurrentHashMap<>();
         this.scanner = new DefaultServiceProviderScanner();
         this.isRegistry = isRegistry;
     }
 
-    public Register(ServicePositionProvider positionProvider, ServiceRegistry serviceRegistry, boolean isRegistry) {
+    public ServiceRegister(ServicePositionProvider positionProvider, ServiceRegistry serviceRegistry, boolean isRegistry) {
         this(isRegistry);
         this.positionProvider = positionProvider;
         this.serviceRegistry = serviceRegistry;
     }
 
-    public Register(String registryIp, int registryPort, Class<? extends ServiceRegistry> registryType,
-            String providerIp, int providerPort, boolean isRegistry) {
+    public ServiceRegister(String registryIp, int registryPort, Class<? extends ServiceRegistry> registryType,
+                           String providerIp, int providerPort, boolean isRegistry) {
         this(isRegistry);
         ProxyFactory proxyFactory = new DefaultProxyFactory(registryIp, registryPort, registryType);
         serviceRegistry = proxyFactory.getServiceRegistry();

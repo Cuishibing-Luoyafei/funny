@@ -2,7 +2,6 @@ package nx.funny.registry;
 
 import nx.funny.transporter.message.HeartBeatRequest;
 import nx.funny.transporter.message.HeartBeatResponse;
-
 import java.util.List;
 import java.util.Set;
 

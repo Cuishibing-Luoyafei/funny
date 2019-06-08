@@ -6,13 +6,13 @@ import org.junit.Test;
 
 import java.util.Set;
 
-public class ServerServiceHeapRegistryTest {
+public class HeapServiceRegistryTest {
 
     private ServiceRegistry serviceRegistry;
 
     @Before
     public void before(){
-        serviceRegistry = new ServerServiceHeapRegistry();
+        serviceRegistry = new HeapServiceRegistry("",9527);
     }
 
     @Test

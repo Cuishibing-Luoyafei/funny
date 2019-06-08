@@ -1,14 +1,9 @@
 package nx.funny.registry;
 
-import jdk.nashorn.internal.ir.WhileNode;
-import lombok.NoArgsConstructor;
 import nx.funny.transporter.common.HeartBeatRequestCodeType;
 import nx.funny.transporter.common.HeartBeatResponseCodeType;
 import nx.funny.transporter.message.HeartBeatRequest;
 import nx.funny.transporter.message.HeartBeatResponse;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.SetUtils;
-
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.logging.Level;
@@ -18,8 +13,11 @@ import java.util.stream.Collectors;
 /**
  * ServiceRegistry的服务端实现
  */
-@NoArgsConstructor
-public class ServerServiceHeapRegistry implements ServiceRegistry {
+public class HeapServiceRegistry extends AbstractRegistry {
+
+    public HeapServiceRegistry(String ip, int port) {
+        super(ip, port);
+    }
 
     private Logger logger = Logger.getLogger(getClass().getName());
 
@@ -35,7 +33,8 @@ public class ServerServiceHeapRegistry implements ServiceRegistry {
 
     private static ThreadPoolExecutor structurePool() {
         // 使用无界队列, 提高容错性
-        return new ThreadPoolExecutor(100, 100, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
+        return new ThreadPoolExecutor(100, 100, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
+                new ThreadPoolExecutor.AbortPolicy());
     }
 
     private Set<ServicePosition> getPositionContainer(ServiceType type) {
@@ -50,7 +49,7 @@ public class ServerServiceHeapRegistry implements ServiceRegistry {
         Set<ServicePosition> container = getPositionContainer(type);
         synchronized (container) {
             container.add(position);
-            logger.log(Level.INFO, "register:" + info.toString());
+            logger.log(Level.INFO, "serviceRegister:" + info.toString());
         }
     }
 
@@ -72,10 +71,7 @@ public class ServerServiceHeapRegistry implements ServiceRegistry {
     @Override
     public Set<ServiceInfo> retrieve(String name) {
         logger.log(Level.INFO, "retrieve:" + name);
-        return serviceRegistry
-                .entrySet()
-                .stream()
-                .filter(entry -> name.equals(entry.getKey().getName()))
+        return serviceRegistry.entrySet().stream().filter(entry -> name.equals(entry.getKey().getName()))
                 .flatMap(entry -> entry.getValue().stream().map(position -> new ServiceInfo(entry.getKey(), position)))
                 .collect(Collectors.toSet());
     }
@@ -97,7 +93,8 @@ public class ServerServiceHeapRegistry implements ServiceRegistry {
                 synchronized (serviceNamePoolMap.get(threadIndex)) {
                     // 在服务池内部处理同一个类型的服务, 遍历处理, 并交由其内部的线程池, 进行每个心跳的维持
                     serviceNamePoolMap.get(threadIndex).execute(() -> {
-                        if (HeartBeatRequestCodeType.HeartBeatRequestCodeTypeValue.NORMAL.value == heartBeatRequest.getCode()) {
+                        if (HeartBeatRequestCodeType.HeartBeatRequestCodeTypeValue.NORMAL.value == heartBeatRequest
+                                .getCode()) {
                             allHeartbeatInfoMap.putIfAbsent(threadIndex, new HashSet<>(0));
                             if (allHeartbeatInfoMap.get(threadIndex).contains(heartBeatRequest)) {
                                 allHeartbeatInfoMap.get(threadIndex).remove(heartBeatRequest);
@@ -107,7 +104,8 @@ public class ServerServiceHeapRegistry implements ServiceRegistry {
                                 // 进行心跳处理
                                 checkHeartbeatItem(heartBeatRequest);
                             }
-                        } else if (HeartBeatRequestCodeType.HeartBeatRequestCodeTypeValue.FIN.value == heartBeatRequest.getCode()) {
+                        } else if (HeartBeatRequestCodeType.HeartBeatRequestCodeTypeValue.FIN.value == heartBeatRequest
+                                .getCode()) {
                             // 移除注册的信息
                             remove(heartBeatRequest.getServiceInfo());
                             allHeartbeatInfoMap.get(threadIndex).remove(heartBeatRequest);
@@ -119,18 +117,20 @@ public class ServerServiceHeapRegistry implements ServiceRegistry {
                 }
             });
         });
-        return HeartBeatResponse.of()
-                .code(HeartBeatResponseCodeType.HeartBeatResponseCodeTypeValue.OK.value)
+        return HeartBeatResponse.of().code(HeartBeatResponseCodeType.HeartBeatResponseCodeTypeValue.OK.value)
                 .currentTime(new Long(System.currentTimeMillis() / 1000).intValue());
     }
 
     private void checkHeartbeatItem(final HeartBeatRequest heartBeatRequest) {
         while (true) {
-            if (System.currentTimeMillis() > heartBeatRequest.getSendInterval() + (long) heartBeatRequest.getCurrentTime() * 1000 + (HeartBeatRequest.FAILURE_RETRY_TIME * HeartBeatRequest.FAILURE_RETRY_INTERVAL)) {
+            if (System.currentTimeMillis() > heartBeatRequest.getSendInterval()
+                    + (long) heartBeatRequest.getCurrentTime() * 1000
+                    + (HeartBeatRequest.FAILURE_RETRY_TIME * HeartBeatRequest.FAILURE_RETRY_INTERVAL)) {
                 logger.warning(String.format("provider heartbeat timeout, provider info: %s", heartBeatRequest));
                 // 移除注册的信息
                 remove(heartBeatRequest.getServiceInfo());
-                allHeartbeatInfoMap.getOrDefault(heartBeatRequest.getServiceInfo().getType().getName().hashCode(), new HashSet<>(0)).remove(heartBeatRequest);
+                allHeartbeatInfoMap.getOrDefault(heartBeatRequest.getServiceInfo().getType().getName().hashCode(),
+                        new HashSet<>(0)).remove(heartBeatRequest);
                 break;
             }
             try {

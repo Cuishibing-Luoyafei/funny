@@ -1,9 +1,9 @@
 package nx.funny.consumer;
 
 import nx.funny.provider.register.FirstNewTargetFactory;
-import nx.funny.provider.register.Register;
+import nx.funny.provider.register.ServiceRegister;
 import nx.funny.provider.server.ProviderServer;
-import nx.funny.registry.ServerServiceHeapRegistry;
+import nx.funny.registry.HeapServiceRegistry;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ public class DefaultProxyFactoryTest {
 
     @Before
     public void before() {
-        proxyFactory = new DefaultProxyFactory("localhost", 9527, ServerServiceHeapRegistry.class);
+        proxyFactory = new DefaultProxyFactory("localhost", 9527, HeapServiceRegistry.class);
     }
 
     // 注册服务
@@ -21,15 +21,15 @@ public class DefaultProxyFactoryTest {
     public void testRegisterService() {
 
         // 构建ServiceProviderRegister对象
-        Register register = new Register("localhost", 9527, ServerServiceHeapRegistry.class,
+        ServiceRegister serviceRegister = new ServiceRegister("localhost", 9527, HeapServiceRegistry.class,
                 "localhost", 9528, false);
-        register.register(RpcTestInterfaceImpl.class, FirstNewTargetFactory.INSTANCE());
+        serviceRegister.register(RpcTestInterfaceImpl.class, FirstNewTargetFactory.INSTANCE());
 
-        //register.register("RemoteObject",new RpcTestInterfaceImpl("instance 2"));
+        //serviceRegister.serviceRegister("RemoteObject",new RpcTestInterfaceImpl("instance 2"));
 
         // 启动服务
-        ProviderServer server = new ProviderServer(register);
-        server.start(9528);
+        ProviderServer server = new ProviderServer(serviceRegister);
+        server.start();
     }
 
     // 调用

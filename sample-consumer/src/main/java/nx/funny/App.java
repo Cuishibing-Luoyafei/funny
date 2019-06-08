@@ -1,7 +1,7 @@
 package nx.funny;
 
 import nx.funny.consumer.DefaultProxyFactory;
-import nx.funny.registry.ServerServiceHeapRegistry;
+import nx.funny.registry.HeapServiceRegistry;
 import nx.funny.registry.ServiceInfo;
 import nx.funny.registry.ServiceRegistry;
 import nx.funny.sampleprovider.SampleProviderInterface;
@@ -15,7 +15,7 @@ public class App {
     public static void main(String[] args) {
 
         // 根据注册中心地址生成代理工厂
-        DefaultProxyFactory proxyFactory = new DefaultProxyFactory("localhost", 9527, ServerServiceHeapRegistry.class);
+        DefaultProxyFactory proxyFactory = new DefaultProxyFactory("localhost", 9527, HeapServiceRegistry.class);
 
         // 获取远程对象
         SampleProviderInterface service = proxyFactory.getProxy(SampleProviderInterface.class);
@@ -27,6 +27,6 @@ public class App {
         ServiceRegistry serviceRegistry = proxyFactory.getProxy(ServiceRegistry.class);
         // 查看SampleProviderInterface在注册中心的注册情况
         Set<ServiceInfo> infoSet = serviceRegistry.retrieve(SampleProviderInterface.class.getName());
-        infoSet.forEach(info -> System.out.println(info.getType().getTypeName()));
+        infoSet.forEach(info -> System.out.println(String.format("ip:%s port:%s name:%s",info.getPosition().getIp(),info.getPosition().getPort(),info.getType().getTypeName())));
     }
 }

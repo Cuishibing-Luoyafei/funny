@@ -11,7 +11,7 @@ public class NioServerTest {
 
     @Before
     public void before() {
-        server = new NioServer(request -> {
+        server = new NioServer("",9527,request -> {
             System.out.println(request.toString());
             DefaultInvokerResponse response = new DefaultInvokerResponse();
             response.setResult(new DefaultParameter(String.class, "OK"));
@@ -21,7 +21,7 @@ public class NioServerTest {
 
     @Test
     public void testStart() {
-        server.start(9527);
+        server.start();
     }
 
 }

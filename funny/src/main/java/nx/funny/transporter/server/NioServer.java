@@ -14,7 +14,8 @@ import nx.funny.transporter.server.channlehandler.NettyInvokerRequestHandler;
 import nx.funny.transporter.server.channlehandler.NettyInvokerResponseEncoder;
 
 
-public class NioServer implements Server {
+public class NioServer extends AbstractServer {
+
     @Setter
     @Getter
     private InvokerRequestProcessor requestProcessor;
@@ -25,19 +26,20 @@ public class NioServer implements Server {
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
-    public NioServer() {
+    public NioServer(String bindIp,int port) {
+        super(bindIp,port);
         Object translator = new JdkMessageTranslator<>();
         jdkMessageRequestTranslator = (JdkMessageTranslator<InvokerRequest>) translator;
         jdkMessageResponseTranslator = (JdkMessageTranslator<InvokerResponse>) translator;
     }
 
-    public NioServer(InvokerRequestProcessor requestProcessor) {
-        this();
+    public NioServer(String bindIp,int port,InvokerRequestProcessor requestProcessor) {
+        this(bindIp,port);
         this.requestProcessor = requestProcessor;
     }
 
     @Override
-    public void start(int port) {
+    public void start() {
         bossGroup = new NioEventLoopGroup();
         workerGroup = new NioEventLoopGroup();
         try {

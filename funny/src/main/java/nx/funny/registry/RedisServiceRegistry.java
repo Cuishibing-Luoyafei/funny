@@ -2,6 +2,8 @@ package nx.funny.registry;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.Getter;
+import lombok.Setter;
 import nx.funny.transporter.message.HeartBeatRequest;
 import nx.funny.transporter.message.HeartBeatResponse;
 import redis.clients.jedis.Jedis;
@@ -19,30 +21,30 @@ import java.util.logging.Logger;
 /**
  * 基于redis实现的一个ServiceRegistry
  */
-public class ServerServiceRedisRegistry implements ServiceRegistry {
+public class RedisServiceRegistry extends AbstractRegistry {
 
 	private Logger logger = Logger.getLogger(getClass().getName());
 
+	@Getter
 	private String redisHost;
+	@Getter
 	private int redisPort;
-	private String name;
+	@Getter
+	private String user;
+	@Getter
 	private String password;
 
-	private StringSerializer serializer;
-	private StringDeSerializer deSerializer;
+	@Setter
+	private StringSerializer serializer = new DefaultStringSerializer();
+	@Setter
+	private StringDeSerializer deSerializer = new DefaultDeStringSerializer();
 
-	public ServerServiceRedisRegistry(String redisHost, int redisPort, String name, String password) {
-		this(redisHost, redisPort, name, password, new DefaultStringSerializer(), new DefaultDeStringSerializer());
-	}
-
-	public ServerServiceRedisRegistry(String redisHost, int redisPort, String name, String password,
-			StringSerializer serializer, StringDeSerializer deSerializer) {
+	public RedisServiceRegistry(String ip, int port, String redisHost, int redisPort, String user, String password) {
+		super(ip, port);
 		this.redisHost = redisHost;
 		this.redisPort = redisPort;
-		this.name = name;
+		this.user = user;
 		this.password = password;
-		this.serializer = serializer;
-		this.deSerializer = deSerializer;
 	}
 
 	private Jedis getJedisConnection() {
@@ -119,7 +121,7 @@ public class ServerServiceRedisRegistry implements ServiceRegistry {
 		if (!success)
 			register(info);
 		else
-			logger.log(Level.INFO, "register:" + info.toString());
+			logger.log(Level.INFO, "serviceRegister:" + info.toString());
 	}
 
 	@Override
@@ -180,22 +182,6 @@ public class ServerServiceRedisRegistry implements ServiceRegistry {
 		// TODO: 2018/12/10 待实现redis方式的接收心跳
 		System.out.println(String.format("receiveHeartbeat: %s", services));
 		return null;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 }

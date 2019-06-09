@@ -1,7 +1,11 @@
-package nx.funny.consumer;
+package nx.funny.consumer.factory;
 
 import lombok.Getter;
 import lombok.Setter;
+import nx.funny.consumer.DefaultInvocationHandler;
+import nx.funny.consumer.RandomServiceChooser;
+import nx.funny.consumer.ServiceChooser;
+import nx.funny.consumer.SpecificInvocationHandler;
 import nx.funny.provider.ServicePositionProvider;
 import nx.funny.registry.ServiceInfo;
 import nx.funny.registry.ServicePosition;
@@ -29,7 +33,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 
     public DefaultProxyFactory(String registryIP, int registryPort, Class<? extends ServiceRegistry> registryType) {
         this();
-        generateRegsitry(() -> new ServicePosition(registryIP, registryPort), registryType);
+        generateRegistry(() -> new ServicePosition(registryIP, registryPort), registryType);
     }
 
     /**
@@ -39,8 +43,8 @@ public class DefaultProxyFactory implements ProxyFactory {
      * @param registryType     注册中心类型,由于可能有多种注册中心类型,所以这里要指定
      * @return 生成的注册中心实例
      */
-    public ServiceRegistry generateRegsitry(ServicePositionProvider positionProvider,
-                                            Class<? extends ServiceRegistry> registryType) {
+    private ServiceRegistry generateRegistry(ServicePositionProvider positionProvider,
+                                             Class<? extends ServiceRegistry> registryType) {
         ServiceRegistry registry = getProxy(ServiceRegistry.class,
                 new ServiceInfo(
                         new ServiceType(ServiceRegistry.class.getName(),

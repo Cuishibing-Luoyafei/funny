@@ -4,21 +4,23 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import lombok.Setter;
-import nx.funny.transporter.message.MessageDecoder;
-import nx.funny.transporter.message.MessageEncoder;
 import nx.funny.transporter.message.DefaultMessage;
 import nx.funny.transporter.message.Message;
+import nx.funny.transporter.message.MessageDecoder;
+import nx.funny.transporter.message.MessageEncoder;
 import nx.funny.transporter.request.InvokerRequest;
 import nx.funny.transporter.request.JdkMessageTranslator;
 import nx.funny.transporter.response.InvokerResponse;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class OioClient implements Client, Closeable {
+public class OioClient implements Client {
+
+    private static final int BUFFER_SIZE = 1024;
+
     @Getter
     @Setter
     private MessageEncoder<InvokerRequest, Message> messageEncoder;
@@ -31,7 +33,8 @@ public class OioClient implements Client, Closeable {
     private InputStream inputStream;
     private OutputStream outputStream;
 
-    private static final int BUFFER_SIZE = 1024;
+    private boolean connected = false;
+
     @Getter
     @Setter
     private int bufferSize = BUFFER_SIZE;
@@ -44,9 +47,13 @@ public class OioClient implements Client, Closeable {
 
     @Override
     public void connect(String ip, int port) throws IOException {
+        if (connected) {
+            return;
+        }
         socket = new Socket(ip, port);
         inputStream = socket.getInputStream();
         outputStream = socket.getOutputStream();
+        connected = true;
     }
 
     @Override
@@ -64,6 +71,11 @@ public class OioClient implements Client, Closeable {
         message = DefaultMessage.read(buffer);
         buffer.clear();
         return messageDecoder.decode(message);
+    }
+
+    @Override
+    public boolean connected() {
+        return connected;
     }
 
     @Override

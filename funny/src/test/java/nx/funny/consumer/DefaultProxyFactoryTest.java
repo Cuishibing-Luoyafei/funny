@@ -1,5 +1,6 @@
 package nx.funny.consumer;
 
+import nx.funny.consumer.factory.DefaultProxyFactory;
 import nx.funny.provider.register.FirstNewTargetFactory;
 import nx.funny.provider.register.ServiceRegister;
 import nx.funny.provider.server.ProviderServer;

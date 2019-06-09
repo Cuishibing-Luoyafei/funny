@@ -1,4 +1,4 @@
-package nx.funny.consumer;
+package nx.funny.consumer.factory;
 
 import nx.funny.registry.ServiceInfo;
 import nx.funny.registry.ServiceRegistry;

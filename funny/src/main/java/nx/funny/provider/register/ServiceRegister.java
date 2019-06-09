@@ -2,8 +2,8 @@ package nx.funny.provider.register;
 
 import lombok.Getter;
 import lombok.Setter;
-import nx.funny.consumer.DefaultProxyFactory;
-import nx.funny.consumer.ProxyFactory;
+import nx.funny.consumer.factory.DefaultProxyFactory;
+import nx.funny.consumer.factory.ProxyFactory;
 import nx.funny.provider.ServicePositionProvider;
 import nx.funny.provider.ServiceProvider;
 import nx.funny.provider.scanner.DefaultServiceProviderScanner;

@@ -1,6 +1,6 @@
 package nx.funny.provider;
 
-import nx.funny.consumer.DefaultProxyFactory;
+import nx.funny.consumer.factory.DefaultProxyFactory;
 import nx.funny.provider.register.ServiceRegister;
 import nx.funny.registry.HeapServiceRegistry;
 import nx.funny.registry.ServicePosition;

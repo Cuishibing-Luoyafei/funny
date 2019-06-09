@@ -1,10 +1,12 @@
 package nx.funny.consumer;
 
 import lombok.Setter;
+import nx.funny.consumer.factory.ClientFactory;
+import nx.funny.consumer.factory.DefaultClientFactory;
 import nx.funny.registry.ServiceInfo;
 import nx.funny.registry.ServicePosition;
 import nx.funny.registry.ServiceType;
-import nx.funny.transporter.client.OioClient;
+import nx.funny.transporter.client.Client;
 import nx.funny.transporter.parameter.DefaultParameter;
 import nx.funny.transporter.parameter.Parameter;
 import nx.funny.transporter.request.DefaultInvokerRequest;
@@ -19,6 +21,9 @@ public class SpecificInvocationHandler implements InvocationHandler {
 
     @Setter
     private ServiceInfo serviceInfo;
+
+    @Setter
+    private ClientFactory clientFactory = new DefaultClientFactory();
 
     public SpecificInvocationHandler() {
     }
@@ -35,7 +40,8 @@ public class SpecificInvocationHandler implements InvocationHandler {
     protected Object invoke(ServiceInfo serviceInfo, Method method, Object[] args) throws Exception {
         ServiceType type = serviceInfo.getType();
         ServicePosition position = serviceInfo.getPosition();
-        try (OioClient client = new OioClient()) {
+        try {
+            Client client = clientFactory.getClient(position);
             client.connect(position.getIp(), position.getPort());
             DefaultInvokerRequest request = new DefaultInvokerRequest();
             request.setName(type.getName());
@@ -44,6 +50,10 @@ public class SpecificInvocationHandler implements InvocationHandler {
             request.setParameters(getParameters(method, args));
             InvokerResponse response = client.sendRequest(request);
             return response.getResult().getValue();
+        } catch (Exception e) {
+            Client removed = clientFactory.removeClient(position);
+            removed.close();
+            throw e;
         }
     }
 

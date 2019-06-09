@@ -3,7 +3,10 @@ package nx.funny.utils;
 import nx.funny.transporter.parameter.Parameter;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class MethodUtils {
 
@@ -64,6 +67,9 @@ public class MethodUtils {
 
         @Override
         public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
             if (obj instanceof MethodCacheKey) {
                 MethodCacheKey other = (MethodCacheKey) obj;
                 if (hashCode() != other.hashCode()) {

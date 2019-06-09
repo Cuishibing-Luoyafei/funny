@@ -48,6 +48,9 @@ public class ServiceInfo implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj instanceof ServiceInfo) {
             ServiceInfo info = (ServiceInfo) obj;
             return Objects.equals(info.getType(), type) &&

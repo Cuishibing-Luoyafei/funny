@@ -40,6 +40,9 @@ public class ServicePosition implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj instanceof ServicePosition) {
             ServicePosition position = (ServicePosition) obj;
             return Objects.equals(position.ip, ip) && Objects.equals(position.port, port);

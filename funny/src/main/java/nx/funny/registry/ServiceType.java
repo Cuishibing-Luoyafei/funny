@@ -1,7 +1,6 @@
 package nx.funny.registry;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -53,6 +52,9 @@ public class ServiceType implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj instanceof ServiceType) {
             ServiceType type = (ServiceType) obj;
             return Objects.equals(type.name, name) &&
